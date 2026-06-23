@@ -1,0 +1,38 @@
+# Machine-specific configuration
+.local/config.json
+
+# Node modules (if using JavaScript skills)
+node_modules/
+npm-debug.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+.cache/
+
+# Backup files
+*.bak
+*.backup
+*~

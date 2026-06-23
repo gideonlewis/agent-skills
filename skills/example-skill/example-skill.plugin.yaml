@@ -1,0 +1,19 @@
+name: example-skill
+description: Example skill template - copy this to create your own custom skill
+version: 1.0.0
+author: Your Name
+license: MIT
+
+# Define what commands/triggers activate this skill
+triggers:
+  - keyword: "example"
+    description: "Example of a skill trigger"
+
+# Metadata
+metadata:
+  category: "utility"
+  requires_authentication: false
+  supported_platforms:
+    - darwin
+    - linux
+    - win32
