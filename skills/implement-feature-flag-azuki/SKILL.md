@@ -1,79 +1,77 @@
 ---
 name: implement-feature-flag-azuki
 description: |
-  Implement a feature flag on the azuki side — define it under
-  internal/lib/feature/flag and wire it into a get_feature_flags handler
-  (frontend-facing) or a usecase branch (backend-only). For a frontend-facing flag,
-  run this AFTER implement-feature-flag-cred-proto's PR is merged and the vX.Y.Z-go
-  tag is published, passing that version. For a backend-only flag, run standalone
-  (no proto, no version).
-argument-hint: "<flag name / purpose> [cred-proto version, e.g. v1.51.0]"
+  Triển khai feature flag phía azuki — định nghĩa flag dưới internal/lib/feature/flag
+  rồi đấu nối vào handler get_feature_flags (hướng frontend) hoặc một nhánh usecase
+  (chỉ backend). Với flag hướng frontend, chạy SAU KHI PR của
+  implement-feature-flag-cred-proto đã merge và tag vX.Y.Z-go đã publish, truyền kèm
+  version đó. Với flag chỉ dùng ở backend, chạy độc lập (không proto, không version).
+argument-hint: "<flag_name / mục đích> [cred-proto version, vd v1.51.0]"
 ---
 
-# Implement a Feature Flag — azuki side
+# Feature Flag — azuki
 
-This is the **azuki side** of a feature flag. For general best practices (naming,
-override precedence, delete-friendly code, tests) defer to the `use-feature-flag`
-skill — this skill focuses on the concrete **wiring**.
+Đây là **phần azuki** của feature flag. Best practices chung (đặt tên, thứ tự override,
+code dễ xóa, test) tham chiếu skill `use-feature-flag` — skill này tập trung vào **đấu nối**.
 
-## First: frontend-facing or backend-only?
+## Trước tiên: hướng frontend hay chỉ backend?
 
-**Decide from the user's request.** If the request says the flag is used **only in the
-backend** (no frontend behavior depends on it), it is **backend-only** — do NOT
-implement it in the `GetFeatureFlags` API and do NOT bump the proto version. Otherwise,
-if the frontend must read it via `GetFeatureFlags`, it is **frontend-facing**.
+Quyết định dựa trên arguments. Nếu có version cred-proto → hướng frontend, cần expose flag ra RPC GetFeatureFlags. Nếu không có version → chỉ backend, không expose ra RPC.
 
-| Case | Comes from | What to do |
-| --- | --- | --- |
-| **Frontend-facing** | Frontend reads it via `GetFeatureFlags`; Phase 1 (`implement-feature-flag-cred-proto`) was run; a cred-proto version is provided | Steps **1 → 2 → 3a → 4** |
-| **Backend-only** | Request states the flag is backend-only | Steps **2 → 3b → 4** (skip proto bump & handler) |
+| Loại               | Dấu hiệu                                                                                     | Các bước                                         |
+| ------------------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **Hướng frontend** | Frontend đọc flag qua `GetFeatureFlags`; Phase 1 (cred-proto) đã chạy; có version cred-proto | 1 → 2 → 3 → **4a** → 5 → 6                       |
+| **Chỉ backend**    | Yêu cầu nói rõ flag chỉ dùng ở backend                                                       | 1 → 3 → **4b** → 5 → 6 (bỏ bump proto & handler) |
 
-Confirm the frontend-facing case if needed: the field should exist in the released
-proto, e.g. `grep -r "<snake_case_name>" ../cred-proto/proto/*/rpc/get_feature_flags.proto`.
-If the intent is unclear from the request, ask.
+## Đường dẫn azuki
 
-> **Never add a proto field from this skill.** Proto changes belong to
-> `implement-feature-flag-cred-proto`. If a frontend-facing flag has no proto field
-> yet, stop and run that skill first.
-
-## azuki paths
-
-- Flag definitions: `internal/lib/feature/flag/*.go` (one file per domain, e.g. `spc.go`)
-- Handlers: `internal/presentation/{spc_public,console_api,anmitsu_public,kintsuba_public}_api_presentation/internal/get_feature_flags/handler.go`
+- Định nghĩa flag: `internal/lib/feature/flag/*.go` (mỗi domain 1 file, vd `console.go`)
+- Handler: `internal/presentation/{spc_public,console_api,anmitsu_public,kintsuba_public}_api_presentation/internal/get_feature_flags/handler.go`
 
 ---
 
-## Step 1 — Bump the proto dependency (frontend-facing only)
+## Bước 0 — Preflight: kiểm tra `gh`
 
-**Requires Phase 1 merged & published.** Use the **cred-proto version passed as the
-argument** (e.g. `v1.51.0`). The azuki module tag has a **`-go` suffix**, so normalize
-it: `v1.51.0` → `v1.51.0-go` (if the argument already ends in `-go`, use it as-is).
+Cần `gh` để mở PR. Kiểm tra; nếu chưa có/chưa đăng nhập thì dừng và báo người dùng tự
+hoàn tất (skill không nhập token thay bạn):
 
 ```bash
-# argument: v1.51.0  →  go get target: v1.51.0-go
-go get github.com/Finatext/cred-proto@v1.51.0-go
+gh --version || echo "gh chưa cài (brew install gh)"
+gh auth status   # nếu fail → chạy: gh auth login
+```
+
+## Bước 1 — Parse tham số & tạo branch từ master
+
+- `flag_name` (bắt buộc) và `cred-proto version` (bắt buộc nếu hướng frontend, vd `v1.62.0-go`).
+- `CRES-XXXX` (ticket Backlog) dùng cho tên branch & PR. Nếu thiếu → **hỏi** trước khi tạo branch/PR.
+- Luôn tách branch từ `master` (không từ WIP branch). Nếu `master` không có ở local, dùng `origin/master`.
+
+```bash
+git fetch origin
+git checkout master && git pull --ff-only origin master
+git checkout -b "feat/CRES-XXXX-<flag_name>"
+```
+
+## Bước 2 — Bump dependency proto (chỉ frontend-facing)
+
+Chỉ cập nhật khi version được cung cấp **mới hơn** version cred-proto hiện tại trong
+`go.mod` (tránh downgrade / no-op). Skill **không** query remote để kiểm tra tag tồn tại
+— giả định caller đã truyền đúng tag.
+
+```bash
+# xem version hiện tại
+grep "github.com/Finatext/cred-proto" go.mod
+# nếu version truyền vào mới hơn thì cập nhật:
+go get github.com/Finatext/cred-proto@v1.62.0-go
 go mod tidy
 ```
 
-If no version was provided for a frontend-facing flag, **ask the user for it** (it is
-the cred-proto release created after Phase 1 merged). Do not guess — bumping to the
-wrong version means the generated field is missing and the handler (Step 3a) won't
-compile. To look one up: `gh release list --repo Finatext/cred-proto`.
+> Nếu CI sau đó fail vì tag `-go` chưa thực sự publish → chạy lại bước này khi tag đã có.
 
-Confirm `go.mod` shows the new `github.com/Finatext/cred-proto vX.Y.Z-go`.
+## Bước 3 — Định nghĩa flag (LUÔN LUÔN)
 
-> Advanced (local pre-merge testing only): to develop against unreleased proto, run
-> `make gen` in the local cred-proto checkout and add a temporary
-> `replace github.com/Finatext/cred-proto => ../cred-proto` to `go.mod`. **Remove the
-> replace and pin the real `-go` tag before opening/merging the azuki PR** — never
-> merge a `replace` to a local path.
-
----
-
-## Step 2 — Define the flag (ALWAYS)
-
-Add the flag to the domain-appropriate file under `internal/lib/feature/flag/`
-(e.g. SPC flags → `spc.go`) using `feature.RegisterFlagSchema[bool]`:
+Thêm flag vào file domain tương ứng dưới `internal/lib/feature/flag/`, trường hợp không có file nào phù hợp → tạo file mới. Dùng `feature.RegisterFlagSchema[bool]` . Xem skill `use-feature-flag` để biết cách đặt tên, override, sunset date, code dễ xóa.
+Ex:
 
 ```go
 // EnablePreviousApplicationListSearchWithUrlParams enables searching previous
@@ -81,35 +79,32 @@ Add the flag to the domain-appropriate file under `internal/lib/feature/flag/`
 var EnablePreviousApplicationListSearchWithUrlParams = feature.RegisterFlagSchema[bool](
 	"enable_previous_application_list_search_with_url_params",
 	feature.WithDescription("Enables searching the previous application list with URL parameters."),
-	feature.WithMaintainedBy("<your-name>"),
-	feature.WithTicketURL("https://finatexthd.atlassian.net/browse/CRES-XXXX"),
-	feature.WithAddedOn(value.NewDate(2026, 7, 15)),
-	feature.WithSunsetOn(value.NewDate(2026, 8, 5)), // ~three weeks after being defined
+	feature.WithMaintainedBy("QuanHuynh in Fushigidane"),
+	feature.WithTicketURL("https://teq-dev.backlog.com/view/CRES-XXXX"),
+	feature.WithAddedOn(value.NewDate(2026, 7, 15)),  // ngày định nghĩa flag trong code
+	feature.WithSunsetOn(value.NewDate(2026, 8, 5)),  // ~3 tuần sau khi định nghĩa
 	feature.WithDefault(false),
 	feature.WithDefault(true).ForEnv(value.EnvLocal, value.EnvTest, value.EnvDevelopment).ForLicensee(value.LicenseeIDSPC),
 )
 ```
 
-Conventions (see `use-feature-flag` for the rationale):
-- Variable name `PascalCase`; schema key `snake_case`. For a frontend-facing flag the
-  schema key **must match the proto field name**.
-- `Enable*` / `Disable*` prefix.
-- Every flag needs a **sunset date** — flags are temporary and meant to be deleted.
-- `WithDefault(false)` base, then `WithDefault(true).ForEnv(...).ForLicensee(...)` for
-  rollout. Only use `LicenseeID` constants from `internal/lib/value/org_id.go`.
-  **Never use `LicenseeIDManju`.**
+Quy ước (xem `use-feature-flag` để hiểu lý do):
 
----
+- Tên biến `PascalCase`; schema key `snake_case`. Với flag frontend, schema key **phải trùng tên field proto**.
+- Prefix `Enable*` / `Disable*`.
+- **Bắt buộc có sunset date** — flag là tạm thời, sẽ bị xóa.
+- Base `WithDefault(false)`, rollout bằng `WithDefault(true).ForEnv(...).ForLicensee(...)`.
+  Chỉ dùng hằng `LicenseeID` từ `internal/lib/value/org_id.go`. **Không dùng `LicenseeIDManju`.**
 
-## Step 3 — Wire it up
+## Bước 4 — Đấu nối
 
-### 3a. Frontend-facing: return it from the handler
+### 4a. Frontend-facing: trả về từ handler
 
-In the matching `get_feature_flags/handler.go`, read the flag with the existing `query`
-and add it to the response. Follow the surrounding pattern — on error, **log and treat
-as disabled** (do not return the error):
+Trong `get_feature_flags/handler.go` tương ứng, đọc flag bằng `query` sẵn có và thêm vào
+response. Theo pattern xung quanh — khi lỗi thì **log và coi như tắt** (không return error):
 
 ```go
+// ...các field sẵn có...
 enablePreviousApplicationListSearchWithUrlParams, err := feature.Flag(ctx, flag.EnablePreviousApplicationListSearchWithUrlParams, query)
 if err != nil {
 	log.Error("get enable_previous_application_list_search_with_url_params feature flag failed", logger.ErrorAttr(err))
@@ -119,36 +114,21 @@ if err != nil {
 ```go
 return connect.NewResponse(
 	&rpc.GetFeatureFlagsResponse{
-		// ...existing fields...
+		// ...các field sẵn có...
 		EnablePreviousApplicationListSearchWithUrlParams: enablePreviousApplicationListSearchWithUrlParams,
 	},
 ), nil
 ```
 
-> Use the **generated** Go field name from Phase 1 (e.g. `EnableMvpCreditCard` for
-> `enable_mvp_credit_card`).
+> Dùng đúng tên field Go **được generate** từ Phase 1 (vd `EnableMvpCreditCard` cho `enable_mvp_credit_card`).
 
-### 3b. Backend-only: branch where the behavior lives
+### 4b. Backend-only: rẽ nhánh nơi hành vi diễn ra
 
-Read it in the usecase / handler that owns the behavior, with the matching query type,
-and write **delete-friendly** code (early-return the legacy path):
+Sẽ không thực hiện step 4a
 
-```go
-enabled, err := feature.Flag(ctx, flag.EnablePreviousApplicationListSearchWithUrlParams, feature.LicenseeQuery(licenseeID))
-if err != nil {
-	logger.FromContext(ctx).Error("failed to get ... feature flag", logger.ErrorAttr(err))
-}
-if !enabled {
-	return legacySearch(ctx, input) // old behavior, deleted when the flag is removed
-}
-return search(ctx, input) // canonical new behavior
-```
+## Bước 5 — Lint, format, build
 
----
-
-## Step 4 — Lint, format, build
-
-Lint & format the packages you touched before committing:
+Chạy trên các package đã đụng tới, **trước khi** commit:
 
 ```bash
 ./custom-gcl run --fix --timeout 30m --config ./.golangci.yml \
@@ -157,20 +137,54 @@ Lint & format the packages you touched before committing:
 go build ./...
 ```
 
-Limit tests/lint to the changed and related files to keep it fast.
+## Bước 6 — Commit, push & mở PR
+
+```bash
+git add -A
+git commit -m "[CRES-XXXX] GetFeatureFlags: added <flag_name>"
+git push -u origin "feat/CRES-XXXX-<flag_name>"
+```
+
+Tiêu đề PR **phải chứa** `CRES-XXXX`.
+
+Body PR — 1 câu mô tả thay đổi rồi tới link (giữ mục `参考リンク` tiếng Nhật):
+
+```markdown
+Add `flag_name_xxxx` to GetFeatureFlagsResponse
+so the console frontend can toggle the workflow-history subject-id fix.
+
+## 参考リンク
+
+- https://finatexthd.atlassian.net/browse/CRES-XXXXX
+```
+
+Xác nhận với người dùng rồi tạo:
+
+```bash
+gh pr create --repo Finatext/azuki \
+  --label release:minor \
+  --title "[CRES-XXXX] GetFeatureFlags: added <flag_name>" \
+  --body-file <body>
+```
+
+**Không tự merge** — PR được review và merge thủ công.
 
 ---
 
 ## Checklist
 
-**Frontend-facing (Phase 2, after cred-proto merged)**
-- [ ] `go.mod` bumped to the released `-go` tag (Step 1)
-- [ ] Flag defined in `internal/lib/feature/flag/*.go`, schema key == proto field name, sunset date set (Step 2)
-- [ ] Handler returns the value, log-on-error pattern, correct generated Go field name (Step 3a)
-- [ ] Lint/format/build pass (Step 4)
+**Frontend-facing** (Phase 2, sau khi cred-proto merged)
 
-**Backend-only (standalone)**
-- [ ] Flag defined in `internal/lib/feature/flag/*.go` with sunset date (Step 2)
-- [ ] `feature.Flag()` branch written delete-friendly where behavior lives (Step 3b)
-- [ ] No proto / handler / go.mod-proto changes made
-- [ ] Lint/format/build pass (Step 4)
+- [ ] `go.mod` bump lên tag `-go` đã release (Bước 2)
+- [ ] Flag định nghĩa trong `internal/lib/feature/flag/*.go`, schema key == tên field proto, có sunset date (Bước 3)
+- [ ] Handler trả về giá trị, pattern log-on-error, đúng tên field Go generated (Bước 4a)
+- [ ] Lint/format/build pass (Bước 5)
+- [ ] Commit, push, PR `release:minor` + `CRES-XXXX` trong tiêu đề (Bước 6)
+
+**Backend-only** (độc lập)
+
+- [ ] Flag định nghĩa trong `internal/lib/feature/flag/*.go` có sunset date (Bước 3)
+- [ ] Nhánh `feature.Flag()` viết dễ xóa nơi có hành vi (Bước 4b)
+- [ ] Không đụng proto / handler / go.mod-proto
+- [ ] Lint/format/build pass (Bước 5)
+- [ ] Commit, push, PR (Bước 6)

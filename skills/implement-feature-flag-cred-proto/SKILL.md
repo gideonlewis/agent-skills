@@ -1,54 +1,74 @@
 ---
 name: implement-feature-flag-cred-proto
 description: |
-  Phase 1 of a frontend-facing feature flag: add a bool field to
-  GetFeatureFlagsResponse in the cred-proto repo, regenerate code, and open the
-  release PR. Use when a feature flag must be exposed to the frontend via the
-  GetFeatureFlags RPC. After the PR is merged & published, continue with the
-  implement-feature-flag-azuki skill. Backend-only flags skip this skill entirely.
-argument-hint: "<flag name / purpose> [presentation: spc|console|anmitsu|kintsuba]"
+  Triển khai feature flag phía cred-proto: thêm 1 field bool vào
+  GetFeatureFlagsResponse trong repo cred-proto rồi mở PR bằng `gh`. Dùng khi flag
+  cần expose ra frontend qua RPC GetFeatureFlags. Merge & publish xong thì chạy tiếp
+  skill implement-feature-flag-azuki. Flag chỉ dùng ở backend thì bỏ qua skill này.
+argument-hint: "<flag_name> CRES-XXXX"
 ---
 
-# Implement a Feature Flag — Phase 1 (cred-proto)
+# Feature Flag — cred-proto
 
-This is the **proto side** of a frontend-facing feature flag. It ends at "PR opened".
-The azuki side (flag definition + handler wiring) is a **separate skill**,
-`implement-feature-flag-azuki`, run **after** this PR is merged and published.
+Đây là **phần proto** của một feature flag hướng frontend, kết thúc ở bước "PR đã mở".
+Phần định nghĩa flag + đấu nối handler nằm ở skill riêng `implement-feature-flag-azuki`,
+chạy **sau khi** PR này được merge và publish (workflow `publish-go.yml` sinh ra tag
+`vX.Y.Z-go` mà azuki phụ thuộc vào — tag này chỉ tồn tại sau Phase 1).
 
-## When to use / skip
+## Khi nào dùng / bỏ qua
 
-- **Use** only when the frontend must read the flag from the `GetFeatureFlags` RPC.
-- **Skip entirely** for a **backend-only** flag (only azuki code reads it). Go straight
-  to `implement-feature-flag-azuki` — adding an unused proto field is waste.
-- If unsure whether the frontend needs it, ask the user before editing proto.
+- **Dùng** khi frontend cần đọc flag qua RPC `GetFeatureFlags`.
+- **Bỏ qua** nếu flag chỉ dùng ở backend (chỉ code azuki đọc) → đi thẳng tới
+  `implement-feature-flag-azuki`; thêm field proto không dùng là lãng phí.
+- Không chắc frontend có cần không → hỏi người dùng trước khi sửa proto.
 
-## Prerequisite ordering (why this is Phase 1)
+## Tham số
 
 ```
-[THIS SKILL] cred-proto PR merged → release-and-publish → publish-go.yml tags vX.Y.Z-go
-                                                                   │
-                                                                   ▼
-             [implement-feature-flag-azuki] go get cred-proto@vX.Y.Z-go
+implement-feature-flag-cred-proto <flag_name> CRES-XXXX
 ```
 
-The `vX.Y.Z-go` module tag azuki depends on **only exists after** this PR is merged and
-the `publish-go.yml` workflow runs. Do not start the azuki-side version bump until then.
+- `<flag_name>` — tên flag dạng `snake_case`, ví dụ `enable_console_workflow_history_missing_subject_id_fix`.
+- `[CRES-XXXX]` — link ticket Backlog. **Bắt buộc** (dùng cho tiêu đề PR và tên branch).
+  Nếu thiếu → dừng và hỏi người dùng.
 
-## Repo & paths (cred-proto)
+## Chọn file proto
 
-Module `github.com/Finatext/cred-proto`. Edit the file matching the consuming frontend:
+Module `github.com/Finatext/cred-proto`. Sửa đúng file theo frontend tiêu thụ flag
+(nếu không suy ra được, hỏi người dùng):
 
-- SPC (borrower app): `proto/spc/rpc/get_feature_flags.proto`
-- Console (operator):  `proto/console/rpc/get_feature_flags.proto`
-- Anmitsu:             `proto/anmitsu/rpc/get_feature_flags.proto`
-- Kintsuba:            `proto/kintsuba/rpc/v1/get_feature_flags.proto`
+| Frontend            | File                                            |
+| ------------------- | ----------------------------------------------- |
+| SPC (app người vay) | `proto/spc/rpc/get_feature_flags.proto`         |
+| Console (vận hành)  | `proto/console/rpc/get_feature_flags.proto`     |
+| Anmitsu             | `proto/anmitsu/rpc/get_feature_flags.proto`     |
+| Kintsuba            | `proto/kintsuba/rpc/v1/get_feature_flags.proto` |
 
 ---
 
-## Step 1 — Add the field to the proto
+## Bước 0 — Preflight: kiểm tra `gh`
 
-Add a `bool` field to `GetFeatureFlagsResponse` with a **doc comment** and the
-**next unused field number**.
+Skill cần `gh` (GitHub CLI) để mở PR. Kiểm tra; nếu chưa có/chưa đăng nhập thì dừng và
+báo người dùng tự hoàn tất (skill không nhập token thay bạn):
+
+```bash
+gh --version || echo "gh chưa cài (brew install gh)"
+gh auth status   # nếu fail → chạy: gh auth login
+```
+
+## Bước 1 — Tạo branch từ master
+
+Luôn tách branch từ `master` (không từ WIP branch đang dở). Nếu working tree bẩn hoặc
+`master` không có ở local, dùng `origin/master` làm base.
+
+```bash
+git checkout master && git pull --ff-only
+git checkout -b "feat/CRES-XXXX-<flag_name>"
+```
+
+## Bước 2 — Thêm field vào proto
+
+Thêm 1 field `bool` vào `GetFeatureFlagsResponse`:
 
 ```proto
 // EnablePreviousApplicationListSearchWithUrlParams enables searching previous
@@ -56,82 +76,69 @@ Add a `bool` field to `GetFeatureFlagsResponse` with a **doc comment** and the
 bool enable_previous_application_list_search_with_url_params = 128;
 ```
 
-Rules:
-- **Comment style**: start with the PascalCase name, then a one-line description. Match the existing comments in the file. Optionally add the JIRA URL on a second line.
-- **Field number**: use a fresh number. Never reuse a `reserved` number; never renumber or move existing fields.
-- **Field name**: `snake_case` mirroring the PascalCase name. Keep this identical to the azuki flag schema key so the mapping is obvious.
+Quy tắc:
 
-### Regenerate generated code
+- **Comment**: dòng đầu là tên PascalCase + mô tả ngắn (khớp style comment sẵn có); tùy chọn thêm URL ticket ở dòng 2.
+- **Số field**: lấy số mới lớn hơn field cao nhất hiện có. Không tái dùng số đã `reserved`, không đánh số lại/di chuyển field cũ.
+- **Tên field**: `snake_case` phản chiếu tên PascalCase, giống hệt key flag bên azuki để dễ ánh xạ.
 
-From the `cred-proto` repo root:
+> Không chạy `make gen` — việc sinh code (Go/TS/OpenAPI) do CI / release workflow lo.
+
+## Bước 3 — Commit & push
 
 ```bash
-make gen   # or: make fmt && make gen
+git add <file>.proto
+git commit -m "[CRES-XXXX] GetFeatureFlagsResponse: added <flag_name>"
+git push -u origin "feat/CRES-XXXX-<flag_name>"
 ```
 
-Runs `buf format` + code generation (Go/TS/OpenAPI) via Docker. Verify the new field
-appears in the generated Go under `dist/go/<pres>/rpc/...`.
+## Bước 4 — Mở PR bằng `gh`
 
-> Note: proto field `enable_mvp_credit_card` generates Go field `EnableMvpCreditCard`
-> (protobuf initialisms). Note the generated Go name — the azuki skill needs it for
-> the handler.
+Thêm field mới là thay đổi **tương thích ngược** → nhãn **`release:minor`** (chỉ dùng
+`release:major` khi di chuyển/đổi tên/xóa; `release:patch` khi chỉ sửa comment).
+Tiêu đề PR **phải chứa** `CRES-XXXX` (để sinh release-note STG).
 
----
-
-## Step 2 — Open the cred-proto PR
-
-Adding a **new field** to a message is a **backward-compatible** change.
-
-- **Semver label: `release:minor`** (team policy: `release:minor` for everything
-  except emergency fixes). Not `release:major` (that's moving/renaming/deleting) and
-  not `release:patch` (comment-only / non-effective changes).
-- **PR title** must include the JIRA ticket number (`CRES-XXXX`) — required for STG
-  release-note generation.
-- Fill in `概要` (what & why, with ticket/issue/Slack link) and `参考リンク` per
-  `.github/pull_request_template.md`.
-
-Draft PR body (Japanese, matching repo convention):
+Body PR theo `.github/pull_request_template.md` — giữ nguyên tiếng Nhật:
 
 ```markdown
 ## 概要
 
-`GetFeatureFlagsResponse` に `enable_previous_application_list_search_with_url_params`
-フィールドを追加します。<!-- なぜ必要か + チケットリンク -->
+`GetFeatureFlagsResponse` に `enable_xxx` フィールドを追加しました。
+（なぜ必要か + チケットリンク）
 
 ## 参考リンク
 
-- https://finatexthd.atlassian.net/browse/CRES-XXXX
+- https://finatexthd.atlassian.net/browse/CRES-XXXXX
 ```
 
-Create with `gh` (confirm with the user before creating):
+Tạo PR bằng `gh`:
 
 ```bash
 gh pr create --repo Finatext/cred-proto \
-  --title "CRES-XXXX: add enable_previous_application_list_search_with_url_params to GetFeatureFlagsResponse" \
+  --label release:minor \
+  --title "[CRES-XXXX] GetFeatureFlagsResponse: added <flag_name>" \
   --body-file <body>
 ```
 
-**Do not merge automatically.** The PR is reviewed and **merged manually**. After merge,
-`publish-go.yml` produces the `vX.Y.Z-go` module tag.
+**Không tự merge** — PR được review và merge thủ công. Sau merge, `publish-go.yml` sinh
+ra tag `vX.Y.Z-go`.
 
 ---
 
-## Next
+## Bàn giao
 
-Once the PR is merged and the `-go` tag is published, note the released cred-proto
-version (e.g. `v1.51.0`) and run:
+Sau khi PR merge và tag `-go` publish, ghi lại version cred-proto (vd `v1.51.0`) rồi chạy:
 
 ```
-/implement-feature-flag-azuki <same flag name> v1.51.0
+/implement-feature-flag-azuki <đúng tên flag> v1.51.0
 ```
 
-to bump the proto dependency to that version, define the flag, and wire the handler.
+## Checklist
 
-## Checklist (Phase 1)
-
-- [ ] Correct `get_feature_flags.proto` chosen for the consuming frontend
-- [ ] `bool` field added with doc comment + fresh field number
-- [ ] `make gen` run; generated Go field name noted for the azuki skill
-- [ ] PR opened with `release:minor` label + `CRES-XXXX` in the title
-- [ ] PR body follows the template (概要 / 参考リンク)
-- [ ] Handoff: after manual merge + publish, continue with `implement-feature-flag-azuki`
+- [ ] Đã parse `<flag_name>` + `CRES-XXXX` (dừng nếu thiếu CRES)
+- [ ] `gh` sẵn sàng & đã đăng nhập
+- [ ] Branch `feat/CRES-XXXX-<flag_name>` tạo **từ master**
+- [ ] Đúng file `get_feature_flags.proto`; field `bool` + comment + số field mới
+- [ ] Commit & push lên branch (không chạy `make gen`)
+- [ ] PR mở bằng `gh`: nhãn `release:minor` + `CRES-XXXX` trong tiêu đề, body theo template
+- [ ] Không tự merge; sau merge + publish → tiếp tục `implement-feature-flag-azuki`
