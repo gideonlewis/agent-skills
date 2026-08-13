@@ -1,0 +1,22 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "Kinako UI Adapter — azuki"           # Tên hiển thị trên UI
+  short_description: "Tạo adapter Vibe→Kinako cho một component trong azuki-app"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $azuki-kinako-ui-adapter để tạo adapter chuyển component <TênComponent> từ Vibe UI sang Kinako UI."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/azuki-kinako-ui-adapter-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/azuki-kinako-ui-adapter.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+# dependencies:          # Khai báo công cụ mà skill phụ thuộc
+#   tools:
+#     - type: "cli"      # "cli" cho lệnh shell, "mcp" cho MCP server
+#       value: "gh"      # Tên lệnh hoặc tên MCP server
+#       description: "Vì sao skill cần công cụ này"

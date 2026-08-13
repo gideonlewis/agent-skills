@@ -5,13 +5,15 @@ Production-grade engineering skills for Claude Code with personal customization.
 ## Project Structure
 
 ```
-skills/              → Core skills (SKILL.md per directory)
-agents/              → Reusable agent personas (code-reviewer, test-engineer, etc.)
-references/          → Checklists and evaluation criteria
-.claude/commands/    → Slash commands (/spec, /plan, /build, /test, /review, /ship)
-hooks/              → Session lifecycle hooks (when needed)
-docs/               → Setup guides and documentation
+skills/<name>/SKILL.md            → Skill content + frontmatter (required)
+skills/<name>/agents/openai.yaml  → Codex runtime interface config (required)
+skills/<name>/references/         → Checklists, fixtures, metadata snapshots (required)
+hooks/                            → Session lifecycle hooks (when needed)
+docs/                             → Setup guides and documentation
 ```
+
+Skills are invoked directly by name (`/plan`, `/spec`, ...). There is no
+`.claude/commands/` wrapper layer.
 
 ## Skills by Phase
 
@@ -24,87 +26,86 @@ docs/               → Setup guides and documentation
 
 ## Conventions
 
+### Language
+
+All prose in `SKILL.md` — including the `description` field — is written in
+**Vietnamese**. Keep English only for technical keywords (`merge request`,
+`pipeline`, `feature flag`), proper nouns (GitLab, Backlog, Mattermost), code
+identifiers, and externally mandated templates.
+
 ### Skill Format
 
-Every skill lives in `skills/<name>/SKILL.md` with frontmatter:
+Every skill lives in `skills/<name>/SKILL.md`. The directory name **must match**
+the `name` field:
 
 ```yaml
 ---
 name: skill-name
-description: What it does. Use when [specific scenario].
+description: >
+  Mô tả bằng tiếng Việt: skill làm gì và kích hoạt trong tình huống nào.
 ---
 
-# Title
+# Tiêu Đề
 
-## When to Use
+## Khi Nào Dùng
 
-When this skill applies.
+Tình huống cụ thể skill này áp dụng, và khi nào nên dùng skill khác.
 
-## Process
+## Quy Trình
 
-Step-by-step phases or instructions.
+Các bước hoặc phase cụ thể.
 
 ## Anti-patterns
 
-What to avoid.
+Cách làm sai cần tránh.
 
 ## Red Flags
 
-🚩 Watch out for...
+🚩 Dấu hiệu đang đi sai hướng.
 ```
 
-### Supporting Files
+### agents/openai.yaml
 
-Only create if content exceeds 100 lines:
-- `examples.md` — Concrete usage examples
-- `criteria.md` — Evaluation rubrics  
-- `scripts/` — Automation scripts
-- `references/` — Checklists
+Required for every skill. `display_name` and `short_description` are mandatory;
+optional properties stay as `#` comments so they are discoverable. Full property
+table in [skills/create-skill/references/openai-yaml-properties.md](skills/create-skill/references/openai-yaml-properties.md).
 
-### Slash Commands
-
-Commands in `.claude/commands/` invoke skills:
-
-```markdown
----
-description: What this command does
----
-
-# /command-name
-
-When invoked, activate [skill-name].
-
-Process:
-1. Step 1
-2. Step 2
-3. Output artifact
+```yaml
+interface:
+  display_name: "My Skill"
+  short_description: "Mô tả ngắn"
+  default_prompt: "Dùng $my-skill để ..."
+policy:
+  allow_implicit_invocation: false
 ```
 
-### Agents
+### references/
 
-Reusable personas in `agents/` for delegation:
-
-- `code-reviewer.md` — Code quality audits
-- `test-engineer.md` — Test strategy and coverage
-- Add custom agents for your workflow
+Required directory, with a `README.md` acting as index (or a `TPD` placeholder
+when empty). Only split content out to `references/` when it exceeds ~100 lines
+or is needed in a subset of situations — keep short content inline in `SKILL.md`.
 
 ## Commands
 
 **Installation:**
-- `./install.sh` — Initial setup (creates symlinks)
-- `./sync.sh` — Update after git pull
+- `./install.sh` — Interactive picker by default; `--all` installs everything,
+  `spec plan build` installs only those, `--list` previews, `-y` skips the
+  confirm prompt. The picked set is saved to `.local/config.json` and honored
+  by `./sync.sh` afterward.
+- `./sync.sh` — Update after git pull (respects a saved custom selection)
 - `./status.sh` — Check installation status
 
 **Validation:**
-- Verify all SKILL.md files have valid YAML frontmatter
-- Verify name and description fields present
-- Verify "When to Use" section is specific (not vague)
+- `./validate-skills.sh` — Check every skill: frontmatter parses, `name` matches
+  the directory, `agents/openai.yaml` is valid, `references/` exists
 
 ## Boundaries
 
 **Always:**
-- Include YAML frontmatter (name, description)
-- Add "When to Use" section for clarity
+- Write prose in Vietnamese (keep technical keywords in English)
+- Include YAML frontmatter (name, description) with `name` matching the directory
+- Include `agents/openai.yaml` and `references/`
+- Add "Khi Nào Dùng" section for clarity
 - Document anti-patterns and red flags
 - Keep skills focused (one workflow per skill)
 - Write for repeatability (not one-time advice)
@@ -142,7 +143,7 @@ git pull
 
 - [QUICK_START.md](QUICK_START.md) — 30-second guide
 - [docs/SETUP.md](docs/SETUP.md) — Installation guide
-- [docs/CREATING_SKILLS.md](docs/CREATING_SKILLS.md) — Skill development
+- [skills/create-skill/SKILL.md](skills/create-skill/SKILL.md) — Skill development (invoke as `/create-skill`)
 - [ARCHITECTURE.md](ARCHITECTURE.md) — Technical details
 
 ## Inspiration

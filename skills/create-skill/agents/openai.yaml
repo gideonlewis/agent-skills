@@ -1,0 +1,22 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "Create Skill"                          # Tên hiển thị trên UI
+  short_description: "Tạo và chuẩn hóa skill mới"        # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $create-skill để khởi tạo một skill mới đúng chuẩn agent-skills, hoặc chuẩn hóa một skill đang có."
+  # icon_small: "./assets/create-skill-small.svg"
+  # icon_large: "./assets/create-skill.png"
+  # brand_color: "#0F62FE"
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:
+  #   - CODEX
+
+# dependencies:
+#   tools:
+#     - type: "cli"
+#       value: "gh"
+#       description: "Vì sao skill cần công cụ này"

@@ -27,10 +27,32 @@ chmod +x install.sh sync.sh status.sh
 ./install.sh
 ```
 
+With no arguments, `install.sh` opens an interactive picker so you choose
+which skills to install instead of getting all of them:
+
+```
+1) ai-platform-gitlab
+   Chỉ dùng skill chuyển tiếp này cho implementation evidence trên AI Platform...
+2) build
+   Xây dựng code theo từng lát cắt task nhỏ (incremental), TDD-first...
+...
+Chọn skill: 1,3,5-7
+```
+
+Other ways to run it:
+
+```bash
+./install.sh --all               # install every skill, no prompt
+./install.sh spec plan build     # install only these three
+./install.sh --list              # preview names + descriptions, install nothing
+./install.sh spec plan -y        # skip the confirmation prompt
+```
+
 The script will:
 - Create `~/.claude/skills` directory
-- Set up symlinks to all skills in the repo
-- Create `.local/config.json` with your machine details
+- Symlink only the skills you picked (or all, with `--all`)
+- Save your selection to `.local/config.json` — the next `./sync.sh` will
+  keep syncing that same subset instead of silently adding every skill back
 
 ### Step 3: Verify Installation
 
@@ -38,36 +60,27 @@ The script will:
 ./status.sh
 ```
 
-You should see:
-```
-✓ Installed skills:
-  ✓ example-skill
-```
+You should see the skills you picked listed under "Installed skills".
 
 ## Daily Usage
 
 ### Creating a New Skill
 
-1. **Copy the template:**
-```bash
-cp -r skills/example-skill skills/my-cool-skill
-mv skills/my-cool-skill/example-skill.plugin.yaml \
-   skills/my-cool-skill/my-cool-skill.plugin.yaml
-```
+Full walkthrough (frontmatter, `agents/openai.yaml`, `references/`, Vietnamese
+prose convention) lives in the
+[create-skill](../skills/create-skill/SKILL.md) skill — invoke it as
+`/create-skill`. Short version:
 
-2. **Edit the YAML file:**
 ```bash
-nano skills/my-cool-skill/my-cool-skill.plugin.yaml
-```
-
-3. **Commit to git:**
-```bash
+mkdir -p skills/my-cool-skill/{agents,references}
+# write skills/my-cool-skill/SKILL.md, agents/openai.yaml, references/README.md
+./validate-skills.sh          # check frontmatter, name match, required files
 git add skills/my-cool-skill
 git commit -m "Add skill: my-cool-skill"
 git push origin main
 ```
 
-4. **Sync on all machines:**
+Sync on all machines:
 ```bash
 ./sync.sh
 ```
@@ -113,8 +126,10 @@ Check your `.local/config.json`:
   "skills_path": "/Users/name/.claude/skills",
   "machine_name": "my-laptop",
   "installation_date": "2026-06-23T15:30:00Z",
+  "last_updated": "2026-08-03T07:51:41Z",
   "installation_method": "symlink",
-  "skills_enabled": []
+  "selection_mode": "custom",
+  "skills_enabled": ["spec", "plan", "build"]
 }
 ```
 
@@ -122,6 +137,11 @@ Check your `.local/config.json`:
 - **skills_path**: Where symlinks are created
 - **machine_name**: Your computer name
 - **installation_method**: Always "symlink" for auto-updates
+- **selection_mode**: `"all"` if you installed everything, `"custom"` if you
+  picked specific skills
+- **skills_enabled**: The exact skill names installed on this machine.
+  `./sync.sh` reads this to keep only that subset in sync — run
+  `./install.sh --all` to go back to installing everything.
 
 ## Troubleshooting
 

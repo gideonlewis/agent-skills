@@ -222,7 +222,7 @@ Skills organized by development phase:
 
 - **[QUICK_START.md](QUICK_START.md)** — 30 seconds
 - **[docs/SETUP.md](docs/SETUP.md)** — Full installation
-- **[docs/CREATING_SKILLS.md](docs/CREATING_SKILLS.md)** — Skill development
+- **[skills/create-skill/SKILL.md](skills/create-skill/SKILL.md)** — Skill development (invoke as `/create-skill`)
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — Technical overview
 - **[CHANGELOG.md](CHANGELOG.md)** — Version history
 

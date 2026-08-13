@@ -1,22 +1,22 @@
 ---
 name: html-diagram
-description: Create a self-contained HTML file for visualizing architecture and understanding the stack with a high-quality SVG diagram. Use when the user wants a full-screen diagram, wants the output to be light on prose, or wants an HTML artifact that is mostly there to make the architecture click fast.
+description: Tạo một file HTML độc lập (self-contained) để trực quan hóa kiến trúc và giúp hiểu rõ stack thông qua một sơ đồ SVG chất lượng cao. Dùng khi người dùng muốn một sơ đồ full-screen, muốn output ít văn xuôi (prose), hoặc muốn một HTML artifact chủ yếu để giúp kiến trúc trở nên dễ hiểu ngay lập tức.
 ---
 
 # HTML Diagram
 
-Review the SVG diagrams used throughout `references/html-effectiveness/`.
+Xem qua các sơ đồ SVG được dùng trong `references/html-effectiveness/`.
 
-There are a bunch in there, and some of them are focused on architecture and whatnot.
+Trong đó có khá nhiều, và một số tập trung vào kiến trúc và các thứ liên quan.
 
-After reviewing them, create an HTML file that is strictly for visualizing the architecture and understanding the stack.
+Sau khi xem xong, tạo một file HTML chỉ dùng để trực quan hóa kiến trúc và giúp hiểu stack.
 
-It should not be prose-heavy. It should simplify more into a full-screen diagram and whatnot.
+Nó không nên nặng về văn xuôi. Nên đơn giản hóa thành một sơ đồ full-screen và các thứ tương tự.
 
-Build a high-quality diagram in SVG. Take your time iterating on the diagram more than anything.
+Xây dựng một sơ đồ chất lượng cao bằng SVG. Dành thời gian lặp lại (iterate) trên sơ đồ nhiều hơn bất cứ thứ gì khác.
 
-If it makes sense, make the diagram interactive and able to visualize and animate different sequences of system behavior.
+Nếu hợp lý, hãy làm cho sơ đồ có tính tương tác và có thể trực quan hóa, animate các chuỗi hành vi khác nhau của hệ thống.
 
-Also review `references/architecture-example.html` — a finished example of this skill done well (full-screen SVG stage, clickable nodes, flow chips that light up and animate request paths).
+Cũng xem qua `references/architecture-example.html` — một ví dụ hoàn chỉnh cho skill này được làm tốt (full-screen SVG stage, các node có thể click, các flow chip sáng lên và animate đường đi của request).
 
-Always include dark mode: hand-rolled CSS variables on `:root` / `html.dark`, a small theme toggle button, `localStorage` persistence, and an apply-before-paint script in `<head>` (default to `prefers-color-scheme`). Style the SVG through CSS classes using those variables — never hard-coded hex inside the SVG — so the diagram follows the theme.
+Luôn bao gồm dark mode: tự viết CSS variables trên `:root` / `html.dark`, một nút toggle theme nhỏ, lưu trạng thái bằng `localStorage`, và một script áp dụng trước khi paint (apply-before-paint) trong `<head>` (mặc định theo `prefers-color-scheme`). Style SVG thông qua các CSS class sử dụng những variables đó — không bao giờ hard-code mã hex bên trong SVG — để sơ đồ luôn theo đúng theme.

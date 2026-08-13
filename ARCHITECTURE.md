@@ -101,8 +101,9 @@ agent-skills/
 │   └── [shared utilities]
 │
 ├── docs/                            # Documentation
-│   ├── SETUP.md                     # Installation guide
-│   └── CREATING_SKILLS.md           # Skill development
+│   └── SETUP.md                     # Installation guide
+│
+├── skills/create-skill/             # Skill development guide (invoke as /create-skill)
 │
 ├── .local/                          # Machine-specific (git-ignored)
 │   └── config.json                  # Per-machine config

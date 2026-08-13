@@ -1,14 +1,14 @@
 ---
 name: html-plan
-description: Create a self-contained HTML plan that is pragmatic, simple, and visually organized. Use when the user wants a plan page in the effective HTML style, wants the writing kept close to what they gave you, or wants the grammar cleaned up without turning it into a whole bigger thing.
+description: Tạo một file HTML plan độc lập (self-contained), thực dụng, đơn giản và được tổ chức trực quan rõ ràng. Dùng khi người dùng muốn một trang plan theo phong cách HTML hiệu quả, muốn nội dung bám sát những gì họ đã cung cấp, hoặc muốn chỉnh sửa ngữ pháp mà không biến nó thành một thứ gì đó to tát hơn.
 ---
 
 # HTML Plan
 
-Review the files throughout `references/html-effectiveness/`.
+Xem qua các file trong `references/html-effectiveness/`.
 
-After reviewing them, create an HTML file for the plan in a similar style.
+Sau khi xem xong, tạo một file HTML cho plan theo phong cách tương tự.
 
-Keep it pragmatic and simple.
+Giữ mọi thứ thực dụng và đơn giản.
 
-Always include dark mode: hand-rolled CSS variables on `:root` / `html.dark`, a small theme toggle button, `localStorage` persistence, and an apply-before-paint script in `<head>` (default to `prefers-color-scheme`).
+Luôn bao gồm dark mode: tự viết CSS variables trên `:root` / `html.dark`, một nút toggle theme nhỏ, lưu trạng thái bằng `localStorage`, và một script áp dụng trước khi paint (apply-before-paint) trong `<head>` (mặc định theo `prefers-color-scheme`).

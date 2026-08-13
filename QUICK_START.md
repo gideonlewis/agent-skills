@@ -93,7 +93,7 @@ rm -rf ~/Projects/agent-skills
 ## Next Steps
 
 - Read [SETUP.md](docs/SETUP.md) for full installation guide
-- Read [CREATING_SKILLS.md](docs/CREATING_SKILLS.md) to learn skill development
+- Run `/create-skill` (or read [skills/create-skill/SKILL.md](skills/create-skill/SKILL.md)) to learn skill development
 - Create your first skill!
 
 ## Support
