@@ -4,7 +4,7 @@
 
 interface:
   display_name: "GitHub Review Requests"       # Tên hiển thị trên UI
-  short_description: "List PR open theo đối tượng (team, tôi, từng thành viên), xuất Markdown cho Mattermost"    # Mô tả ngắn, một dòng
+  short_description: "List PR open ở azuki/azuki-app/cred-proto theo đối tượng (team, tôi, từng thành viên) hoặc 1 repo, xuất Markdown cho Mattermost"    # Mô tả ngắn, một dòng
   default_prompt: "Dùng $github-review-requests để liệt kê PR cần xem, bỏ qua draft (PR chờ tôi review + PR open của team), hoặc PR của một thành viên, xuất bảng Markdown cho Mattermost."      # Prompt gợi ý khi người dùng chọn skill
   # icon_small: "./assets/github-review-requests-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
   # icon_large: "./assets/github-review-requests.png"         # Icon lớn

@@ -1,18 +1,19 @@
 ---
 name: github-review-requests
 description: >
-  Liệt kê pull request GitHub open trong org Finatext rồi xuất bảng Markdown
-  dán thẳng vào Mattermost, với đối tượng chọn được: PR của cả DEV team
+  Liệt kê pull request GitHub open ở các repo Finatext đang theo dõi (mặc định
+  azuki, azuki-app, cred-proto; chỉ định được 1 repo duy nhất) rồi xuất bảng
+  Markdown dán thẳng vào Mattermost, với đối tượng chọn được: PR của cả DEV team
   spc-collab, PR đang request review tới tôi, cả hai gộp lại, hoặc PR của một
   thành viên cụ thể (PR người đó được request review + PR người đó tạo). Bỏ
   qua PR draft. Mỗi PR có người gửi, trạng thái (chờ review, cần sửa, approved
   chờ merge, tồn đọng), reviewer đang chờ và CI. Dùng khi user hỏi "PR nào đang chờ tôi
   review", "danh sách PR assign tôi", "PR của team", "danh sách PR cần xem",
-  "PR của Vĩ/Tiến/Định/Dũng", "review queue", "team còn PR nào chưa merge",
+  "PR của Vĩ/Tiến/Định/Dũng", "PR bên cred-proto", "review queue", "team còn PR nào chưa merge",
   "report PR lên Mattermost", hoặc đầu ngày muốn nắm việc review. Không dùng
   để review nội dung một PR cụ thể (xem `azuki-review-console-rpc-to-core-proto`
   hoặc `review`), không dùng cho merge request GitLab (xem `ai-platform-gitlab`).
-version: 0.3.0
+version: 0.4.0
 author: TEQ AI Platform
 license: Internal
 metadata:
@@ -44,10 +45,22 @@ Review nội dung PR thì dùng skill review tương ứng; GitLab MR thì dùng
 
 | Mục | Giá trị |
 |---|---|
-| Org | `Finatext` (chỉ lấy repo trong org này) |
 | Tôi | `teq-quanhuynh` — tài khoản `gh` đang đăng nhập (`@me`) |
 | Ngưỡng tồn đọng | 14 ngày không có cập nhật |
 | PR draft | Bỏ qua hoàn toàn (`draft:false` trong query) |
+
+### Repo theo dõi
+
+| Repo | Qualifier |
+|---|---|
+| azuki | `repo:Finatext/azuki` |
+| azuki-app | `repo:Finatext/azuki-app` |
+| cred-proto | `repo:Finatext/cred-proto` |
+
+Mọi query đều gắn đủ các qualifier trên (nhiều `repo:` là phép OR), gọi là
+`<REPOS>` ở Bước 2. Muốn theo dõi thêm hoặc bớt repo, chỉ sửa bảng này. Repo
+ngoài bảng (rakugan-cms-server, zarame-server...) bị bỏ qua vì không thuộc
+phạm vi report hằng ngày.
 
 ### DEV team
 
@@ -90,8 +103,13 @@ Mở rộng tự nhiên từ bảng trên, không cần hỏi lại:
   một khối riêng.
 - Chỉ một vế ("PR Vĩ tạo", "Vĩ đang được request review gì") → chỉ section
   tương ứng.
-- Giới hạn repo ("PR team bên cred-proto") → thêm `repo:Finatext/cred-proto`
-  vào mọi query.
+- Chỉ định 1 repo ("PR team bên cred-proto", "PR chờ tôi review ở azuki") →
+  `<REPOS>` chỉ còn đúng qualifier của repo đó, cho mọi section. Tiêu đề report
+  ghi rõ tên repo, ví dụ `### 👥 PR open của team — cred-proto (12)`.
+- User nêu repo ngoài bảng theo dõi (ví dụ "PR bên zarame-server") → dùng
+  `repo:Finatext/<tên>` cho riêng yêu cầu đó, không cần sửa bảng. Tên repo mơ
+  hồ ("app", "proto") thì map sang repo trong bảng nếu chỉ khớp một, còn không
+  thì hỏi lại.
 
 Tên không có trong bảng DEV team: nếu user đưa thẳng GitHub login thì dùng
 luôn; nếu chỉ đưa tên, tra team `Finatext/c-teq-cred`
@@ -112,15 +130,18 @@ token).
 
 ### Bước 2 — Lấy dữ liệu
 
-Chạy mỗi section một lệnh (các section chạy song song được). Chỉ thay phần
-`<FILTER>`:
+Chạy mỗi section một lệnh (các section chạy song song được). Thay `<REPOS>`
+theo mục "Repo theo dõi" (hoặc 1 repo user chỉ định) và `<FILTER>` theo
+section:
 
 ```bash
 SKILL_DIR=~/.claude/skills/github-review-requests
 gh api graphql -F query=@$SKILL_DIR/references/pr-search.graphql \
-  -F q='is:pr is:open draft:false archived:false org:Finatext <FILTER> sort:updated-desc' \
+  -F q='is:pr is:open draft:false archived:false <REPOS> <FILTER> sort:updated-desc' \
   | jq -r --arg now "$(date -u +%s)" --argjson stale_days 14 -f $SKILL_DIR/references/pr-rows.jq
 ```
+
+`<REPOS>` mặc định: `repo:Finatext/azuki repo:Finatext/azuki-app repo:Finatext/cred-proto`.
 
 Ví dụ `<FILTER>`:
 
@@ -135,7 +156,7 @@ pending_reviewers, approvers, changes_requested_by, updated, stale).
 Ghi chú:
 
 - Query lấy tối đa 100 PR. Nếu `issueCount` > 100 thì báo user và đề nghị thu
-  hẹp (ví dụ thêm `repo:Finatext/azuki`).
+  hẹp (ví dụ chỉ định 1 repo).
 - Bot (`copilot-pull-request-reviewer`, `github-actions`, `*[bot]`) đã được
   loại khỏi danh sách review trong jq; `COMMENTED`/`DISMISSED` không tính là
   approve.
@@ -176,7 +197,7 @@ review`, `👥 PR open của team`, `👤 PR vitranteq tạo`. Khi report nhiề
 | cred-proto | [#2357 [CRES-20678] Add SubmitBorrower…](url) | teq-nguyenhuudung | ⏳ Chờ review | ✅ | 09-29 |
 | azuki | [#14457 [CRES-20550] JPKI: Add liquid…](url) | teq-nguyenhuudung | ⏳ Chờ review | ✅ | 09-29 |
 
-### 👥 PR open của team (35)
+### 👥 PR open của team (24)
 
 **⏳ Chờ review (12)**
 
@@ -188,7 +209,7 @@ review`, `👥 PR open của team`, `👤 PR vitranteq tạo`. Khi report nhiề
 **✅ Approved, chờ merge (n)** — không có cột `Đang chờ`
 
 **💤 Tồn đọng >14 ngày (n)** — một dòng mỗi PR:
-- rakugan-cms-server [#432](url) · teq-tienbui · Chờ review · 09-08
+- azuki [#14468](url) · teq-nguyenhuudung · Approved · 09-15
 ```
 
 Section "Đã tạo" của một người (mục 4) dùng cùng format nhóm nhưng bỏ cột
@@ -221,8 +242,8 @@ công khai, khó rút lại.
 
 ## Red Flags
 
-🚩 Section "Đã tạo" có PR ngoài org Finatext hoặc của người ngoài tập login
-đã chọn — query sai.
+🚩 Report có PR ngoài các repo đã chọn hoặc của người ngoài tập login đã
+chọn — query thiếu `<REPOS>` hoặc sai filter.
 🚩 Report có PR draft khi user không hỏi về draft — query thiếu `draft:false`.
 🚩 `issueCount` lớn hơn số dòng in ra — bị cắt ở 100, phải báo user.
 🚩 `gh` trả lỗi `SAML`/`403` — token chưa authorize SSO cho org Finatext, nhờ
