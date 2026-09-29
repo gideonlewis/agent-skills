@@ -50,10 +50,13 @@ thêm heading, không thêm đoạn mở đầu hay kết luận, không có đ�
 
 ## Owner
 
-- Ghi ở **cuối bullet, trong ngoặc tròn, không có `@`**:
-  `(vitran)`, `(oanhtran, thaohuynh)`. Cột `Owner` của bảng ghi username trần.
-- Dùng username Mattermost trong `members.json`. Người ngoài danh sách: giữ tên
-  như trong nguồn (ví dụ `(JP)`).
+- Ghi ở **cuối bullet, trong ngoặc tròn, không có `@`**, bằng **tên thân
+  thiện** (`nickname` trong `members.json`): `(Vĩ)`, `(Định, Thảo)`. Cột
+  `Owner` của bảng ghi tên trần: `Nam`.
+- `nickname` là `null` → dùng username Mattermost thay thế (`(oanhtran)`).
+  Không tự đặt nickname — nhất là khi có 2 người trùng tên gọi (2 Dũng,
+  2 Oanh); user sẽ bổ sung trong `members.json`.
+- Người ngoài danh sách: giữ tên như trong nguồn (ví dụ `(JP)`).
 - Không rõ ai phụ trách → bỏ phần ngoặc, không đoán.
 
 ## Link và Ký Hiệu
@@ -75,32 +78,32 @@ Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng v
 
 ## Key Highlights
 - **Release 29/09:** JP đã lên list PR dự kiến release, nhờ team check PR của mình trong sheet Azuki / Azuki-app (dungnguyen)
-- **QC nghiệm thu OK 4 ticket clean-up FF → Waiting For Release:** [SPCC-3594](https://teq-dev.backlog.com/view/SPCC-3594), [3587](https://teq-dev.backlog.com/view/SPCC-3587), [3589](https://teq-dev.backlog.com/view/SPCC-3589), [3600](https://teq-dev.backlog.com/view/SPCC-3600) (oanhtran, thaohuynh)
-- **Core API (BE):** chia ~40 ticket cho dungnguyenhuu (19) và dinhnguyen (~21), due 29/09–26/10; 4 ticket chunk giao giaoquynh (quanhuynh). Thêm 3 ticket FE chunk_8 (giaoquynh)
-- **[SPCC-3586](https://teq-dev.backlog.com/view/SPCC-3586) mở lại để test:** scope 5h + 1h buffer, bỏ TC-03/04, giữ TC-05; xong 2 môi trường trước trưa 29/09 (vitran)
-- **[SPCC-3584](https://teq-dev.backlog.com/view/SPCC-3584):** đã chia case test trong team, chốt verify trên SPC là đủ; cuối ngày chuyển Ready For Test (dinhnguyen, oanhtran)
+- **QC nghiệm thu OK 4 ticket clean-up FF → Waiting For Release:** [SPCC-3594](https://teq-dev.backlog.com/view/SPCC-3594), [3587](https://teq-dev.backlog.com/view/SPCC-3587), [3589](https://teq-dev.backlog.com/view/SPCC-3589), [3600](https://teq-dev.backlog.com/view/SPCC-3600) (oanhtran, Thảo)
+- **Core API (BE):** chia ~40 ticket cho Dũng (19) và Định (~21), due 29/09–26/10; 4 ticket chunk giao Giao (Quân). Thêm 3 ticket FE chunk_8 (Giao)
+- **[SPCC-3586](https://teq-dev.backlog.com/view/SPCC-3586) mở lại để test:** scope 5h + 1h buffer, bỏ TC-03/04, giữ TC-05; xong 2 môi trường trước trưa 29/09 (Vĩ)
+- **[SPCC-3584](https://teq-dev.backlog.com/view/SPCC-3584):** đã chia case test trong team, chốt verify trên SPC là đủ; cuối ngày chuyển Ready For Test (Định, oanhtran)
 
 ## Needs Confirmation
-- JP fix bug FF `enable_console_engagement_history_view` và nhờ TEQ verify — sớm nhất sáng 29/09, chỉ happy case; cần chốt với JP có tự nghiệm thu để kịp release không (thaohuynh, ngocnguyen)
-- [SPCC-3607](https://teq-dev.backlog.com/view/SPCC-3607): bổ sung case override khi FF = OFF (lyhoanam)
+- JP fix bug FF `enable_console_engagement_history_view` và nhờ TEQ verify — sớm nhất sáng 29/09, chỉ happy case; cần chốt với JP có tự nghiệm thu để kịp release không (Thảo, Ngọc)
+- [SPCC-3607](https://teq-dev.backlog.com/view/SPCC-3607): bổ sung case override khi FF = OFF (Nam)
 
 ## Blockers & Risks
-- Anmitsu không adjust repayment được ([azuki-agora#1022](https://github.com/Finatext/azuki-agora/issues/1022)), ảnh hưởng test phía Anmitsu (dungnguyenhuu)
-- Bug CRES-20869 liên quan upgrade `protobuf` (phát hiện khi test SPCC-3599), chờ JP (thaohuynh)
-- [SPCC-3629](https://teq-dev.backlog.com/view/SPCC-3629) / [3634](https://teq-dev.backlog.com/view/SPCC-3634) / [3635](https://teq-dev.backlog.com/view/SPCC-3635) chờ chunk_2 + chunk_36/37 xong, ETA 01/10 (giaoquynh)
-- QC tạm dừng test Kinako BORROWER_FORM DETAIL để ưu tiên nghiệm thu Clear FF (thaohuynh)
+- Anmitsu không adjust repayment được ([azuki-agora#1022](https://github.com/Finatext/azuki-agora/issues/1022)), ảnh hưởng test phía Anmitsu (Dũng)
+- Bug CRES-20869 liên quan upgrade `protobuf` (phát hiện khi test SPCC-3599), chờ JP (Thảo)
+- [SPCC-3629](https://teq-dev.backlog.com/view/SPCC-3629) / [3634](https://teq-dev.backlog.com/view/SPCC-3634) / [3635](https://teq-dev.backlog.com/view/SPCC-3635) chờ chunk_2 + chunk_36/37 xong, ETA 01/10 (Giao)
+- QC tạm dừng test Kinako BORROWER_FORM DETAIL để ưu tiên nghiệm thu Clear FF (Thảo)
 
 ## Status Changes — JP User Story
 | Ticket | From → To | Owner |
 |---|---|---|
-| [SPCC-3699](https://teq-dev.backlog.com/view/SPCC-3699) JPKI xoá text loại giấy tờ | Open → In Progress | lyhoanam |
-| [SPCC-3366](https://teq-dev.backlog.com/view/SPCC-3366) Kinako BORROWER_FORM DETAIL | On Hold → Testing | thaohuynh |
+| [SPCC-3699](https://teq-dev.backlog.com/view/SPCC-3699) JPKI xoá text loại giấy tờ | Open → In Progress | Nam |
+| [SPCC-3366](https://teq-dev.backlog.com/view/SPCC-3366) Kinako BORROWER_FORM DETAIL | On Hold → Testing | Thảo |
 ```
 
 ## Checklist Trước Khi Trả
 
 - [ ] Đúng 4 heading cấp 2, đúng chữ, đúng thứ tự.
-- [ ] Không có `@` nào; mọi owner nằm trong ngoặc cuối bullet.
+- [ ] Không có `@` nào; mọi owner nằm trong ngoặc cuối bullet và dùng `nickname` (hoặc username khi `nickname` là `null`).
 - [ ] Không có sự kiện nào ngoài khung thời gian.
 - [ ] Bullet Key Highlights đều mở đầu bằng chủ đề in đậm.
 - [ ] Mục trống ghi `None`, không bị bỏ.

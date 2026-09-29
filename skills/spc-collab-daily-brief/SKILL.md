@@ -14,7 +14,7 @@ description: >
   Không dùng để tạo/sửa ticket (xem `nulab-backlog`), không dùng để liệt kê
   PR GitHub (xem `github-review-requests`), không dùng cho report một task hay
   investigation đã xong (xem `spc-collab-report`).
-version: 0.3.0
+version: 0.3.1
 author: TEQ AI Platform
 license: Internal
 argument-hint: "[project=SPCC] [channel=<channel_id>] [date=YYYY-MM-DD | day=YYYY-MM-DD]"
@@ -54,14 +54,16 @@ xem các skill ghi trong `description`.
 
 ## Thành Viên
 
-`references/members.json` là danh sách cố định: tên Backlog, `backlog_id`,
-username Mattermost, email và vai trò. Chỉ gọi activity cho những người này —
+`references/members.json` là danh sách cố định: tên thân thiện
+(`nickname`, ví dụ Vĩ, Định), tên Backlog, `backlog_id`, username Mattermost,
+email và vai trò. Chỉ gọi activity cho những người này —
 vừa nhanh hơn (12 thay vì ~30 lượt gọi), vừa loại được người của project
 khác chỉ có tên trong member list của SPCC.
 
 Lưu ý có 2 người tên Dũng: `dungnguyenhuu` (Nguyen Huu Dung, DEV) và
-`dungnguyen` (Nguyen Tien Dung, BrSE). Khi viết brief dùng username
-Mattermost lấy từ file này, không tự suy từ tên.
+`dungnguyen` (Nguyen Tien Dung, BrSE). Khi viết brief ghi người bằng
+`nickname` trong file này; `nickname` là `null` thì dùng username Mattermost.
+Không tự suy tên gọi từ họ tên — user tự bổ sung `nickname` còn thiếu.
 
 Người ngoài danh sách vẫn có thể xuất hiện trong Mattermost (ví dụ JP, QC
 khác) — giữ nội dung nếu liên quan, nhưng không đi tìm activity Backlog của
