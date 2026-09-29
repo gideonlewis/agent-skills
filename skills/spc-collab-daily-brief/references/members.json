@@ -7,8 +7,8 @@
   {"role": "DEV", "nickname": "Giao", "name": "Nguyễn Ngọc Quỳnh Giao", "backlog_id": 575805, "mattermost": "giaoquynh", "email": "giaoquynh@teqnological.asia"},
   {"role": "DEV", "nickname": "Định", "name": "Nguyen Quang Dinh", "backlog_id": 594778, "mattermost": "dinhnguyen", "email": "dinhnguyen@teqnological.asia"},
   {"role": "PO", "nickname": "Ngọc", "name": "Nguyen Thi Bao Ngoc", "backlog_id": 41839, "mattermost": "ngocnguyen", "email": "ngocnguyen@teqnological.asia"},
-  {"role": "BrSE", "nickname": null, "name": "Nguyen Tien Dung", "backlog_id": 350446, "mattermost": "dungnguyen", "email": "dungnguyen@teqnological.com"},
-  {"role": "BrSE", "nickname": null, "name": "Bui Nhu Oanh", "backlog_id": 580081, "mattermost": "oanhbui", "email": "oanhbui@teqnological.asia"},
-  {"role": "QC", "nickname": null, "name": "Tran Hoang Oanh", "backlog_id": 367328, "mattermost": "oanhtran", "email": "oanhtran@teqnological.asia"},
+  {"role": "BrSE", "nickname": "A Dũng dờ bờ", "name": "Nguyen Tien Dung", "backlog_id": 350446, "mattermost": "dungnguyen", "email": "dungnguyen@teqnological.com"},
+  {"role": "BrSE", "nickname": "C Oanh", "name": "Bui Nhu Oanh", "backlog_id": 580081, "mattermost": "oanhbui", "email": "oanhbui@teqnological.asia"},
+  {"role": "QC", "nickname": "Meow", "name": "Tran Hoang Oanh", "backlog_id": 367328, "mattermost": "oanhtran", "email": "oanhtran@teqnological.asia"},
   {"role": "QC", "nickname": "Thảo", "name": "Huynh Thi Thu Thao", "backlog_id": 529875, "mattermost": "thaohuynh", "email": "thaohuynh@teqnological.asia"}
 ]

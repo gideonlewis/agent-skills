@@ -53,9 +53,9 @@ thêm heading, không thêm đoạn mở đầu hay kết luận, không có đ�
 - Ghi ở **cuối bullet, trong ngoặc tròn, không có `@`**, bằng **tên thân
   thiện** (`nickname` trong `members.json`): `(Vĩ)`, `(Định, Thảo)`. Cột
   `Owner` của bảng ghi tên trần: `Nam`.
-- `nickname` là `null` → dùng username Mattermost thay thế (`(oanhtran)`).
-  Không tự đặt nickname — nhất là khi có 2 người trùng tên gọi (2 Dũng,
-  2 Oanh); user sẽ bổ sung trong `members.json`.
+- `nickname` là `null` → dùng username Mattermost thay thế.
+  Không tự đặt nickname — nhất là khi có 2 người trùng tên gọi; user sẽ
+  bổ sung trong `members.json`.
 - Người ngoài danh sách: giữ tên như trong nguồn (ví dụ `(JP)`).
 - Không rõ ai phụ trách → bỏ phần ngoặc, không đoán.
 
@@ -77,11 +77,11 @@ Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng v
 # Daily brief SPCC — 2026-09-28
 
 ## Key Highlights
-- **Release 29/09:** JP đã lên list PR dự kiến release, nhờ team check PR của mình trong sheet Azuki / Azuki-app (dungnguyen)
-- **QC nghiệm thu OK 4 ticket clean-up FF → Waiting For Release:** [SPCC-3594](https://teq-dev.backlog.com/view/SPCC-3594), [3587](https://teq-dev.backlog.com/view/SPCC-3587), [3589](https://teq-dev.backlog.com/view/SPCC-3589), [3600](https://teq-dev.backlog.com/view/SPCC-3600) (oanhtran, Thảo)
+- **Release 29/09:** JP đã lên list PR dự kiến release, nhờ team check PR của mình trong sheet Azuki / Azuki-app (A Dũng dờ bờ)
+- **QC nghiệm thu OK 4 ticket clean-up FF → Waiting For Release:** [SPCC-3594](https://teq-dev.backlog.com/view/SPCC-3594), [3587](https://teq-dev.backlog.com/view/SPCC-3587), [3589](https://teq-dev.backlog.com/view/SPCC-3589), [3600](https://teq-dev.backlog.com/view/SPCC-3600) (Meow, Thảo)
 - **Core API (BE):** chia ~40 ticket cho Dũng (19) và Định (~21), due 29/09–26/10; 4 ticket chunk giao Giao (Quân). Thêm 3 ticket FE chunk_8 (Giao)
 - **[SPCC-3586](https://teq-dev.backlog.com/view/SPCC-3586) mở lại để test:** scope 5h + 1h buffer, bỏ TC-03/04, giữ TC-05; xong 2 môi trường trước trưa 29/09 (Vĩ)
-- **[SPCC-3584](https://teq-dev.backlog.com/view/SPCC-3584):** đã chia case test trong team, chốt verify trên SPC là đủ; cuối ngày chuyển Ready For Test (Định, oanhtran)
+- **[SPCC-3584](https://teq-dev.backlog.com/view/SPCC-3584):** đã chia case test trong team, chốt verify trên SPC là đủ; cuối ngày chuyển Ready For Test (Định, Meow)
 
 ## Needs Confirmation
 - JP fix bug FF `enable_console_engagement_history_view` và nhờ TEQ verify — sớm nhất sáng 29/09, chỉ happy case; cần chốt với JP có tự nghiệm thu để kịp release không (Thảo, Ngọc)
