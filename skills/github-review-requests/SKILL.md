@@ -7,13 +7,13 @@ description: >
   spc-collab, PR đang request review tới tôi, cả hai gộp lại, hoặc PR của một
   thành viên cụ thể (PR người đó được request review + PR người đó tạo). Bỏ
   qua PR draft. Mỗi PR có người gửi, trạng thái (chờ review, cần sửa, approved
-  chờ merge, tồn đọng), reviewer đang chờ và CI. Dùng khi user hỏi "PR nào đang chờ tôi
+  chờ merge, tồn đọng), reviewer đang chờ và thời điểm cập nhật. Dùng khi user hỏi "PR nào đang chờ tôi
   review", "danh sách PR assign tôi", "PR của team", "danh sách PR cần xem",
   "PR của Vĩ/Tiến/Định/Dũng", "PR bên cred-proto", "review queue", "team còn PR nào chưa merge",
   "report PR lên Mattermost", hoặc đầu ngày muốn nắm việc review. Không dùng
   để review nội dung một PR cụ thể (xem `azuki-review-console-rpc-to-core-proto`
   hoặc `review`), không dùng cho merge request GitLab (xem `ai-platform-gitlab`).
-version: 0.4.0
+version: 0.5.0
 author: TEQ AI Platform
 license: Internal
 metadata:
@@ -150,8 +150,9 @@ Ví dụ `<FILTER>`:
 - Mục 4 (Vĩ): `user-review-requested:vitranteq` và `author:vitranteq` (2 lệnh)
 
 Query GraphQL ở `references/pr-search.graphql`, bộ chuyển sang TSV ở
-`references/pr-rows.jq` (cột: repo, number, url, title, author, status, ci,
-pending_reviewers, approvers, changes_requested_by, updated, stale).
+`references/pr-rows.jq` (cột: repo, number, url, title, author, status,
+pending_reviewers, approvers, changes_requested_by, updated, stale). `updated`
+đã đổi sang giờ máy local (`MM-DD HH:MM`, máy đang ở +07).
 
 Ghi chú:
 
@@ -174,9 +175,6 @@ draft — chỉ xảy ra khi user hỏi thẳng về draft.)
 - Một PR xuất hiện ở cả 2 section (ví dụ PR của Định request tôi review) vẫn
   giữ ở cả hai, vì mỗi section trả lời một câu hỏi khác nhau.
 
-CI: `SUCCESS` → ✅, `FAILURE`/`ERROR` → ❌, `PENDING`/`EXPECTED` → ⏳,
-`NONE` → `-`.
-
 ### Bước 4 — Xuất Markdown
 
 Xuất trong chat, đúng format dưới (Mattermost render được bảng và link).
@@ -184,39 +182,42 @@ Title dài quá ~60 ký tự thì cắt và thêm `…`. Tên người dùng log
 thêm `@` để khỏi ping nhầm trên Mattermost. Nhóm hoặc section nào rỗng thì
 ghi một dòng "Không có PR nào" cho section, bỏ hẳn nhóm con rỗng.
 
-Tiêu đề section theo đối tượng: `🔍 PR chờ tôi review`, `🔍 PR chờ vitranteq
-review`, `👥 PR open của team`, `👤 PR vitranteq tạo`. Khi report nhiều người
-(mục 4), mỗi người là một khối `## <Tên> (<login>)` chứa 2 section của người
-đó.
+Section "Được request review" không có dòng tiêu đề — in thẳng bảng, vì
+đây là phần đầu report và bảng đã tự rõ nghĩa. Section "Đã tạo" giữ tiêu đề
+theo đối tượng: `👥 PR open của team`, `👤 PR vitranteq tạo`. Khi report nhiều
+người (mục 4), mỗi người là một khối `## <Tên> (<login>)` chứa 2 section của
+người đó.
+
+Không có cột CI: report tập trung vào việc ai cần review/merge, CI do tác giả
+tự theo dõi. Cột `Cập nhật` ghi cả giờ (`MM-DD HH:MM`) để phân biệt các PR
+cùng ngày.
 
 ```markdown
-### 🔍 PR chờ tôi review — 29/09 (2)
-
-| Repo | PR | Người gửi | Trạng thái | CI | Cập nhật |
-|---|---|---|---|---|---|
-| cred-proto | [#2357 [CRES-20678] Add SubmitBorrower…](url) | teq-nguyenhuudung | ⏳ Chờ review | ✅ | 09-29 |
-| azuki | [#14457 [CRES-20550] JPKI: Add liquid…](url) | teq-nguyenhuudung | ⏳ Chờ review | ✅ | 09-29 |
+| Repo | PR | Người gửi | Trạng thái | Cập nhật |
+|---|---|---|---|---|
+| cred-proto | [#2357 [CRES-20678] Add SubmitBorrower…](url) | teq-nguyenhuudung | ⏳ Chờ review | 09-29 16:46 |
+| azuki | [#14457 [CRES-20550] JPKI: Add liquid…](url) | teq-nguyenhuudung | ⏳ Chờ review | 09-29 10:12 |
 
 ### 👥 PR open của team (24)
 
 **⏳ Chờ review (12)**
 
-| Repo | PR | Người gửi | Đang chờ | Đã approve | CI | Cập nhật |
-|---|---|---|---|---|---|---|
+| Repo | PR | Người gửi | Đang chờ | Đã approve | Cập nhật |
+|---|---|---|---|---|---|
 
 **🔁 Cần sửa (n)** — cột `Yêu cầu sửa` thay cho `Đang chờ`
 
 **✅ Approved, chờ merge (n)** — không có cột `Đang chờ`
 
 **💤 Tồn đọng >14 ngày (n)** — một dòng mỗi PR:
-- azuki [#14468](url) · teq-nguyenhuudung · Approved · 09-15
+- azuki [#14468](url) · teq-nguyenhuudung · Approved · 09-15 18:20
 ```
 
 Section "Đã tạo" của một người (mục 4) dùng cùng format nhóm nhưng bỏ cột
 `Người gửi` (luôn là người đó).
 
-Cuối report thêm 1–3 dòng **Cần chú ý** nếu có, ví dụ: PR approved nhưng CI
-❌, PR chờ review > 3 ngày, người có nhiều PR đang chờ nhất. Chỉ nêu điều thấy
+Cuối report thêm 1–3 dòng **Cần chú ý** nếu có, ví dụ: PR approved lâu chưa
+merge, PR chờ review > 3 ngày, người có nhiều PR đang chờ nhất. Chỉ nêu điều thấy
 trong dữ liệu, không suy đoán lý do.
 
 ### Bước 5 — Gửi Mattermost (chỉ khi user yêu cầu)

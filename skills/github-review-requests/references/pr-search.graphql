@@ -16,7 +16,6 @@ query($q: String!) {
           nodes { requestedReviewer { ... on User { login } ... on Team { slug } } }
         }
         latestReviews(first: 10) { nodes { author { login } state } }
-        commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
       }
     }
   }
