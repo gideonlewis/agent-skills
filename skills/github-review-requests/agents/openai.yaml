@@ -1,0 +1,25 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "GitHub Review Requests"       # Tên hiển thị trên UI
+  short_description: "List PR open theo đối tượng (team, tôi, từng thành viên), xuất Markdown cho Mattermost"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $github-review-requests để liệt kê PR cần xem, bỏ qua draft (PR chờ tôi review + PR open của team), hoặc PR của một thành viên, xuất bảng Markdown cho Mattermost."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/github-review-requests-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/github-review-requests.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+dependencies:          # Khai báo công cụ mà skill phụ thuộc
+  tools:
+    - type: "cli"      # "cli" cho lệnh shell, "mcp" cho MCP server
+      value: "gh"      # Tên lệnh hoặc tên MCP server
+      description: "Gọi GitHub GraphQL API để tìm PR"
+    - type: "cli"
+      value: "jq"
+      description: "Chuyển kết quả GraphQL thành bảng TSV"
