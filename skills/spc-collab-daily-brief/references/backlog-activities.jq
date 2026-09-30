@@ -49,4 +49,7 @@ flatten
         comment: (($c.comment.content // "") | if . == "" then null else .[:600] end)
       }
   )
+# Bỏ activity không gắn ticket (tạo/sửa Document, Wiki...), ví dụ chính lượt
+# đăng brief lên Backlog Document hôm trước.
+| map(select(.keys | length > 0))
 | sort_by(.at)
