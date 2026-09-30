@@ -6,22 +6,24 @@ lệch heading, thứ tự hay cách ghi tên là người đọc phải dò l�
 
 ## Khung Bắt Buộc
 
-Đúng 1 heading cấp 1 và 4 heading cấp 2, theo đúng thứ tự, đúng chữ, không
-thêm heading, không thêm đoạn mở đầu hay kết luận, không có đường kẻ `---`:
+Đúng 1 tiêu đề `####` và 4 mục `#####`, theo đúng thứ tự, đúng chữ, không
+thêm heading, không thêm đoạn mở đầu hay kết luận, không có đường kẻ `---`.
+Dùng heading cấp nhỏ (`####` / `#####`) vì `#`/`##` hiển thị quá to trên
+Mattermost, làm brief dài và rời rạc:
 
 ```markdown
-# Daily brief SPCC — <label>
+#### Daily brief SPCC — <label>
 
-## Key Highlights
+##### Key Highlights
 - **<Chủ đề>:** <nội dung> (<owner>)
 
-## Needs Confirmation
+##### Needs Confirmation
 - <nội dung> (<owner>)
 
-## Blockers & Risks
+##### Blockers & Risks
 - <nội dung> (<owner>)
 
-## Status Changes — JP User Story
+##### Status Changes — JP User Story
 | Ticket | From → To | Owner |
 |---|---|---|
 | [SPCC-xxxx](https://teq-dev.backlog.com/view/SPCC-xxxx) <tên rút gọn> | Open → In Progress | <owner> |
@@ -74,26 +76,26 @@ thêm heading, không thêm đoạn mở đầu hay kết luận, không có đ�
 Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng văn:
 
 ```markdown
-# Daily brief SPCC — 2026-09-28
+#### Daily brief SPCC — 2026-09-28
 
-## Key Highlights
+##### Key Highlights
 - **Release 29/09:** JP đã lên list PR dự kiến release, nhờ team check PR của mình trong sheet Azuki / Azuki-app (A Dũng dờ bờ)
 - **QC nghiệm thu OK 4 ticket clean-up FF → Waiting For Release:** [SPCC-3594](https://teq-dev.backlog.com/view/SPCC-3594), [3587](https://teq-dev.backlog.com/view/SPCC-3587), [3589](https://teq-dev.backlog.com/view/SPCC-3589), [3600](https://teq-dev.backlog.com/view/SPCC-3600) (Meow, Thảo)
 - **Core API (BE):** chia ~40 ticket cho Dũng (19) và Định (~21), due 29/09–26/10; 4 ticket chunk giao Giao (Quân). Thêm 3 ticket FE chunk_8 (Giao)
 - **[SPCC-3586](https://teq-dev.backlog.com/view/SPCC-3586) mở lại để test:** scope 5h + 1h buffer, bỏ TC-03/04, giữ TC-05; xong 2 môi trường trước trưa 29/09 (Vĩ)
 - **[SPCC-3584](https://teq-dev.backlog.com/view/SPCC-3584):** đã chia case test trong team, chốt verify trên SPC là đủ; cuối ngày chuyển Ready For Test (Định, Meow)
 
-## Needs Confirmation
+##### Needs Confirmation
 - JP fix bug FF `enable_console_engagement_history_view` và nhờ TEQ verify — sớm nhất sáng 29/09, chỉ happy case; cần chốt với JP có tự nghiệm thu để kịp release không (Thảo, Ngọc)
 - [SPCC-3607](https://teq-dev.backlog.com/view/SPCC-3607): bổ sung case override khi FF = OFF (Nam)
 
-## Blockers & Risks
+##### Blockers & Risks
 - Anmitsu không adjust repayment được ([azuki-agora#1022](https://github.com/Finatext/azuki-agora/issues/1022)), ảnh hưởng test phía Anmitsu (Dũng)
 - Bug CRES-20869 liên quan upgrade `protobuf` (phát hiện khi test SPCC-3599), chờ JP (Thảo)
 - [SPCC-3629](https://teq-dev.backlog.com/view/SPCC-3629) / [3634](https://teq-dev.backlog.com/view/SPCC-3634) / [3635](https://teq-dev.backlog.com/view/SPCC-3635) chờ chunk_2 + chunk_36/37 xong, ETA 01/10 (Giao)
 - QC tạm dừng test Kinako BORROWER_FORM DETAIL để ưu tiên nghiệm thu Clear FF (Thảo)
 
-## Status Changes — JP User Story
+##### Status Changes — JP User Story
 | Ticket | From → To | Owner |
 |---|---|---|
 | [SPCC-3699](https://teq-dev.backlog.com/view/SPCC-3699) JPKI xoá text loại giấy tờ | Open → In Progress | Nam |
@@ -102,7 +104,7 @@ Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng v
 
 ## Checklist Trước Khi Trả
 
-- [ ] Đúng 4 heading cấp 2, đúng chữ, đúng thứ tự.
+- [ ] Tiêu đề dùng `####`, 4 mục dùng `#####` (không dùng `#`/`##`/`###`), đúng chữ, đúng thứ tự.
 - [ ] Không có `@` nào; mọi owner nằm trong ngoặc cuối bullet và dùng `nickname` (hoặc username khi `nickname` là `null`).
 - [ ] Không có sự kiện nào ngoài khung thời gian.
 - [ ] Bullet Key Highlights đều mở đầu bằng chủ đề in đậm.
