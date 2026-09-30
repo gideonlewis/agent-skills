@@ -10,7 +10,7 @@ description: >
   kèm reviewer đang chờ, Changes requested, Approved, tồn đọng) và thời điểm
   cập nhật. Dùng khi user hỏi "PR nào đang chờ tôi review", "danh sách PR
   assign tôi", "PR của team", "danh sách PR cần xem", "PR của
-  Vĩ/Tiến/Định/Dũng", "PR bên cred-proto", "PR tồn đọng", "review queue", "team
+  Vĩ/Tiên/Định/Dũng", "PR bên cred-proto", "PR tồn đọng", "review queue", "team
   còn PR nào chưa merge", "report PR lên Mattermost", hoặc đầu ngày muốn nắm
   việc review. Không dùng để review nội dung một PR cụ thể (xem
   `azuki-review-console-rpc-to-core-proto` hoặc `review`), không dùng cho merge
@@ -64,7 +64,7 @@ zarame-server...) bị bỏ qua vì không thuộc phạm vi report hằng ngày
 |---|---|
 | Quân (tôi) | `teq-quanhuynh` |
 | Vĩ (vitran) | `vitranteq` |
-| Tiến (tienbui) | `teq-tienbui` |
+| Tiên (tienbui) | `teq-tienbui` |
 | Định (dinhnguyen) | `teq-dinhnguyen` |
 | Dũng (dungnguyen) | `teq-nguyenhuudung` |
 
@@ -91,7 +91,7 @@ Mỗi yêu cầu được dịch thành một hoặc nhiều **filter** GitHub s
 
 Mở rộng tự nhiên, không cần hỏi lại:
 
-- Nhiều người ("PR của Vĩ và Tiến") → gộp filter mục 4 của từng người vào
+- Nhiều người ("PR của Vĩ và Tiên") → gộp filter mục 4 của từng người vào
   cùng một lần chạy, vẫn ra một bảng.
 - Chỉ một vế ("PR Vĩ tạo") → chỉ filter tương ứng.
 - Chỉ định 1 repo ("PR team bên cred-proto") → `REPOS=cred-proto`. Repo ngoài

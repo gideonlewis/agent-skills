@@ -1,7 +1,7 @@
 [
   {"role": "DEV", "nickname": "Quân", "name": "Huynh Ngoc Quan", "backlog_id": 444549, "mattermost": "quanhuynh", "email": "quanhuynh@teqnological.asia"},
   {"role": "DEV", "nickname": "Vĩ", "name": "Tran Chi Vi", "backlog_id": 373701, "mattermost": "vitran", "email": "vitran@teqnological.asia"},
-  {"role": "DEV", "nickname": "Tiến", "name": "Bui Duc Tien", "backlog_id": 525486, "mattermost": "tienbui", "email": "tienbui@teqnological.asia"},
+  {"role": "DEV", "nickname": "Tiên", "name": "Bui Duc Tien", "backlog_id": 525486, "mattermost": "tienbui", "email": "tienbui@teqnological.asia"},
   {"role": "DEV", "nickname": "Dũng", "name": "Nguyen Huu Dung", "backlog_id": 548627, "mattermost": "dungnguyenhuu", "email": "dungnguyen@teqnological.asia"},
   {"role": "DEV", "nickname": "Nam", "name": "Lý Hoa Nam", "backlog_id": 197201, "mattermost": "lyhoanam", "email": "namly@teqnological.asia"},
   {"role": "DEV", "nickname": "Giao", "name": "Nguyễn Ngọc Quỳnh Giao", "backlog_id": 575805, "mattermost": "giaoquynh", "email": "giaoquynh@teqnological.asia"},
