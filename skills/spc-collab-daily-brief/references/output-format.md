@@ -7,7 +7,8 @@ lệch heading, thứ tự hay cách ghi tên là người đọc phải dò l�
 ## Khung Bắt Buộc
 
 Đúng 1 tiêu đề `###` và 4 mục `####`, theo đúng thứ tự, đúng chữ, không
-thêm heading, không thêm đoạn mở đầu hay kết luận, không có đường kẻ `---`.
+thêm heading, không thêm đoạn mở đầu hay kết luận, không có đường kẻ `---`. Dòng
+duy nhất ngoài 4 mục là **dòng nguồn** ở cuối (xem "Dòng Nguồn").
 Dùng heading cấp vừa (`###` / `####`) vì `#`/`##` hiển thị quá to trên
 Mattermost, làm brief dài và rời rạc:
 
@@ -27,6 +28,8 @@ Mattermost, làm brief dài và rời rạc:
 | Ticket | From → To | Owner |
 |---|---|---|
 | [SPCC-xxxx](https://teq-dev.backlog.com/view/SPCC-xxxx) <tên rút gọn> | Open → In Progress | <owner> |
+
+_Nguồn: Backlog SPCC, Mattermost SPC - dev (từ <dd/mm HH:MM> đến <dd/mm HH:MM>)_
 ```
 
 - `<label>` lấy nguyên từ `window.py` (`2026-09-28` hoặc
@@ -71,6 +74,23 @@ Mattermost, làm brief dài và rời rạc:
   hoặc text thường, không tự tạo link.
 - Ngày viết `dd/mm` (ví dụ `29/09`). Không dùng emoji.
 
+## Dòng Nguồn
+
+Một dòng in nghiêng ở cuối brief, sau bảng Status Changes, cách một dòng
+trống:
+
+```markdown
+_Nguồn: Backlog SPCC, Mattermost SPC - dev (từ 29/09 00:00 đến 29/09 23:59)_
+```
+
+- Khoảng thời gian lấy từ `start_local` / `end_local` của `window.py`, ghi
+  `dd/mm HH:MM`, giờ VN; mốc cuối là `23:59` của ngày cuối trong khung
+  (Thứ 2: `từ 25/09 00:00 đến 27/09 23:59`).
+- Đổi project hoặc channel thì thay tên tương ứng (`Backlog <KEY>`,
+  `Mattermost <tên channel>`).
+- Dữ liệu Mattermost bị cắt (Bước 5) → thêm `, Mattermost có thể thiếu` ngay
+  trước dấu `)`. Không thêm số lượng, không thêm chú thích nào khác.
+
 ## Ví Dụ Chuẩn
 
 Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng văn:
@@ -100,6 +120,8 @@ Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng v
 |---|---|---|
 | [SPCC-3699](https://teq-dev.backlog.com/view/SPCC-3699) JPKI xoá text loại giấy tờ | Open → In Progress | Nam |
 | [SPCC-3366](https://teq-dev.backlog.com/view/SPCC-3366) Kinako BORROWER_FORM DETAIL | On Hold → Testing | Thảo |
+
+_Nguồn: Backlog SPCC, Mattermost SPC - dev (từ 28/09 00:00 đến 28/09 23:59)_
 ```
 
 ## Checklist Trước Khi Trả
@@ -109,4 +131,4 @@ Brief thật ngày 2026-09-28 — dùng làm mẫu về độ dài và giọng v
 - [ ] Không có sự kiện nào ngoài khung thời gian.
 - [ ] Bullet Key Highlights đều mở đầu bằng chủ đề in đậm.
 - [ ] Mục trống ghi `None`, không bị bỏ.
-- [ ] Không có đoạn văn nào ngoài 4 mục (không lời chào, không ghi chú nguồn).
+- [ ] Không có đoạn văn nào ngoài 4 mục, trừ đúng 1 dòng nguồn in nghiêng ở cuối.
