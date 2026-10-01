@@ -5,7 +5,7 @@ description: >
   User Story tương ứng trên Google Sheet "SPC Collab Sprint daily reports" (tab
   sprint hiện tại ghi trong config, ví dụ `Sprint 57`). Ghi vào đúng cột theo
   nội dung thread: FE, BE, Remark, Status, Memo, Release SPC, Release Anmitsu,
-  Teq Deadline, FeatureFlag, releasePRs. Xong thì reply vào thread bảng thay
+  Teq Deadline, FeatureFlag, releasePRs. Xong thì reply ngắn vào thread các thay
   đổi cũ → mới. Dùng khi bot (vd @eddiebot) được mention trong thread với câu
   như "summary và cập nhật daily report", "note report lên sheet daily",
   "cập nhật sheet daily giúp tôi", "update daily sheet theo thread này", "ghi
@@ -162,31 +162,37 @@ thread đang gọi bot (cần `reply_mode: thread`). Vì vậy không gọi thê
 `mattermost-create_post(channel_id, root_id, message)` khi chạy ngoài Hermes
 (ví dụ Claude Code với permalink) **và** user yêu cầu post vào thread.
 
-Format câu trả lời:
+Format câu trả lời: ngắn, đọc lướt trong vài giây. Ví dụ dưới đây chỉ để
+minh hoạ format. Dòng `⚠️ SPCC-3700` là giả định, chỉ có trong reply thật
+khi thật sự có mục cần xác nhận.
 
 ```markdown
-#### Summary
-- <bullet tóm tắt quyết định>
+**Daily sheet · Sprint 57** — đã cập nhật
+SPC: 3549, 3551 release 10/06; 3550 + chunk-2 dời 13/10.
 
-#### Daily sheet — <sprint_tab> (đã cập nhật | xem trước)
-| Ticket | Cột | Cũ | Mới |
-|---|---|---|---|
-| [SPCC-3549](https://teq-dev.backlog.com/view/SPCC-3549) | Release SPC | 2026/09/29 | 2026/10/06 |
+- [SPCC-3549](https://teq-dev.backlog.com/view/SPCC-3549) Release SPC 09/29 → 10/06 · BE
+- [SPCC-3551](https://teq-dev.backlog.com/view/SPCC-3551) Release SPC 09/29 → 10/06 · BE
+- [SPCC-3550](https://teq-dev.backlog.com/view/SPCC-3550) Release SPC 09/29 → 10/13 · BE
+- [SPCC-3617](https://teq-dev.backlog.com/view/SPCC-3617) Release SPC → 10/13 · Memo
 
-#### Cần xác nhận
-- <ticket/nội dung> — <lý do>   (hoặc "None")
-
-[Mở sheet](<spreadsheet_url>#gid=<sheetId của tab>)
+⚠️ SPCC-3700: không có trong Sprint 57
+[Sheet](<spreadsheet_url>)
 ```
 
-- Trong bảng, xuống dòng hiển thị bằng ` ↵ `. Giá trị dài hơn ~80 ký tự thì
-  cắt bớt và thêm `…`. Giá trị cũ đầy đủ vẫn còn trong lịch sử phiên bản
-  của sheet.
-- Không thêm `@` trước tên người trong reply, để không ping lại mọi người.
-- Chế độ xem trước: thêm dòng cuối "Reply `@<bot> apply` để ghi các thay
-  đổi trên."
-- Lấy `sheetId` của tab từ `google_sheets-get_spreadsheet` khi cần dựng link
-  (kết quả lớn, chỉ đọc `sheets[].properties`).
+- Dòng đầu: tên tab và trạng thái (`đã cập nhật`, `xem trước`, hoặc
+  `không có thay đổi`).
+- Dòng thứ hai: tóm tắt quyết định của thread trong **một câu**. Bỏ
+  dòng này nếu thread chỉ có một quyết định và các bullet đã nói đủ.
+- Mỗi ticket **một bullet**. Ngày, `Status` và các giá trị ngắn khác thì ghi
+  `cũ → mới`, ngày rút gọn dạng `MM/DD`. Cột dạng văn bản (`BE`, `FE`, `Memo`,
+  `FeatureFlag`, `releasePRs`) chỉ ghi tên cột sau `·`, vì nội dung xem
+  trên sheet. Không liệt kê `Remark`, vì nó luôn đi kèm FE/BE.
+- Mỗi mục cần xác nhận một dòng `⚠️ <ticket>: <lý do>`. Không có thì bỏ
+  hẳn, không ghi "None".
+- Chế độ xem trước: dòng cuối là `Reply "@<bot> apply" để ghi.`
+- Không có heading, bảng, hay `@` trước tên người.
+- Giá trị cũ đầy đủ vẫn còn trong lịch sử phiên bản của sheet, nên reply không
+  cần lặp lại.
 
 ## Anti-patterns
 
