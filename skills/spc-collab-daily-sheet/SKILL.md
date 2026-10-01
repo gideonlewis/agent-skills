@@ -162,37 +162,49 @@ thread đang gọi bot (cần `reply_mode: thread`). Vì vậy không gọi thê
 `mattermost-create_post(channel_id, root_id, message)` khi chạy ngoài Hermes
 (ví dụ Claude Code với permalink) **và** user yêu cầu post vào thread.
 
-Format câu trả lời: ngắn, đọc lướt trong vài giây. Ví dụ dưới đây chỉ để
-minh hoạ format. Dòng `⚠️ SPCC-3700` là giả định, chỉ có trong reply thật
-khi thật sự có mục cần xác nhận.
+Format câu trả lời: một dòng tiêu đề, một câu tóm tắt, rồi một bảng thay đổi
+gọn. Ví dụ dưới đây chỉ để minh hoạ format. Dòng `⚠️ SPCC-3700` là giả định,
+chỉ có trong reply thật khi thật sự có mục cần xác nhận.
 
 ```markdown
-**Daily sheet · Sprint 57** — đã cập nhật
-SPC: 3549, 3551 release 10/06; 3550 + chunk-2 dời 13/10.
+**Daily sheet · Sprint 57** — đã cập nhật · [Sheet](<spreadsheet_url>)
+3549, 3551 release 10/06; 3550 + chunk-2 dời 13/10 (PO chốt).
 
-- [SPCC-3549](https://teq-dev.backlog.com/view/SPCC-3549) Release SPC 09/29 → 10/06 · BE
-- [SPCC-3551](https://teq-dev.backlog.com/view/SPCC-3551) Release SPC 09/29 → 10/06 · BE
-- [SPCC-3550](https://teq-dev.backlog.com/view/SPCC-3550) Release SPC 09/29 → 10/13 · BE
-- [SPCC-3617](https://teq-dev.backlog.com/view/SPCC-3617) Release SPC → 10/13 · Memo
+| Ticket | Cột | Cũ → Mới |
+|---|---|---|
+| [3549](https://teq-dev.backlog.com/view/SPCC-3549) | Release SPC | 09/29 → 10/06 |
+| | BE | → Đang clean BE, kịp release 10/06 |
+| [3551](https://teq-dev.backlog.com/view/SPCC-3551) | Release SPC | 09/29 → 10/06 |
+| | BE | → Đang clean BE, kịp release 10/06 |
+| [3550](https://teq-dev.backlog.com/view/SPCC-3550) | Release SPC | 09/29 → 10/13 |
+| | BE | → Clean BE + test FF đã merged |
+| [3617](https://teq-dev.backlog.com/view/SPCC-3617) | Release SPC | – → 10/13 |
+| | Memo | + 10/01: ưu tiên delete FF, chunk2 dời 13/10 |
 
 ⚠️ SPCC-3700: không có trong Sprint 57
-[Sheet](<spreadsheet_url>)
 ```
 
-- Dòng đầu: tên tab và trạng thái (`đã cập nhật`, `xem trước`, hoặc
-  `không có thay đổi`).
-- Dòng thứ hai: tóm tắt quyết định của thread trong **một câu**. Bỏ
-  dòng này nếu thread chỉ có một quyết định và các bullet đã nói đủ.
-- Mỗi ticket **một bullet**. Ngày, `Status` và các giá trị ngắn khác thì ghi
-  `cũ → mới`, ngày rút gọn dạng `MM/DD`. Cột dạng văn bản (`BE`, `FE`, `Memo`,
-  `FeatureFlag`, `releasePRs`) chỉ ghi tên cột sau `·`, vì nội dung xem
-  trên sheet. Không liệt kê `Remark`, vì nó luôn đi kèm FE/BE.
-- Mỗi mục cần xác nhận một dòng `⚠️ <ticket>: <lý do>`. Không có thì bỏ
-  hẳn, không ghi "None".
-- Chế độ xem trước: dòng cuối là `Reply "@<bot> apply" để ghi.`
-- Không có heading, bảng, hay `@` trước tên người.
-- Giá trị cũ đầy đủ vẫn còn trong lịch sử phiên bản của sheet, nên reply không
-  cần lặp lại.
+Mattermost không hỗ trợ cỡ chữ nhỏ (không có `<small>`, và heading còn
+làm chữ **to hơn**), nên reply gọn bằng cách rút ngắn nội dung:
+
+- **Dòng đầu**: tên tab, trạng thái (`đã cập nhật`, `xem trước`, hoặc
+  `không có thay đổi`) và link sheet, tất cả trên một dòng. Không dùng
+  heading `#`.
+- **Tóm tắt**: một câu, viết tắt mã ticket (`3549` thay vì `SPCC-3549`).
+- **Bảng**: 3 cột, mỗi ô được sửa là một dòng. Cột `Ticket` chỉ ghi ở dòng
+  đầu của ticket đó, các dòng sau để trống để nhìn thành nhóm. Mã ticket chỉ
+  ghi số và link tới Backlog.
+- **Cũ → Mới**:
+  - Ngày, `Status` và các giá trị ngắn khác: ghi đủ `cũ → mới`, ngày dạng
+    `MM/DD`. Ô cũ trống thì ghi `–`.
+  - Cột văn bản ghi đè (`FE`, `BE`): chỉ ghi `→ <mới>`, rút gọn còn khoảng
+    40 ký tự. Giá trị cũ vẫn còn trong lịch sử phiên bản của sheet.
+  - Cột thêm dòng (`Memo`, `releasePRs`): ghi `+ <dòng được thêm>`.
+  - Không đưa `Remark` vào bảng, vì nó luôn đi kèm FE/BE.
+- **Cần xác nhận**: mỗi mục một dòng `⚠️ <ticket>: <lý do>` dưới bảng. Không
+  có thì bỏ hẳn.
+- **Chế độ xem trước**: dòng cuối là `Reply "@<bot> apply" để ghi.`
+- Không dùng `@` trước tên người, để không ping ai.
 
 ## Anti-patterns
 
