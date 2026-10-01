@@ -1,0 +1,11 @@
+{
+  "spreadsheet_id": "1A9TsxyZG7SwPEDqJUATc0Rr7L4FYanK4c54_z02IzDQ",
+  "spreadsheet_url": "https://docs.google.com/spreadsheets/d/1A9TsxyZG7SwPEDqJUATc0Rr7L4FYanK4c54_z02IzDQ/edit",
+  "sprint_tab": "Sprint 57",
+  "header_row": 2,
+  "first_data_row": 3,
+  "statuses_range": "Statuses!B5:B16",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "writable_headers": ["Status", "FE", "BE", "Remark", "Memo", "Release SPC", "Release Anmitsu", "Teq Deadline", "FeatureFlag", "releasePRs"],
+  "match_headers": ["Jira", "Backlog", "ユーザーストーリー", "Description"]
+}
