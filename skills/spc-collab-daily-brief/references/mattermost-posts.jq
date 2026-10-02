@@ -29,7 +29,7 @@ def is_system:
     oldest_raw_ms: ($all | map(.create_at) | min),
     threads: (
       $posts
-      | map(. + {thread: ((.root_id // "") | if . == "" then null else . end) // .id})
+      | map(. + {thread: (if ((.root_id // "") == "") then .id else .root_id end)})
       | group_by(.thread)
       | map({
           root_id: .[0].thread,
