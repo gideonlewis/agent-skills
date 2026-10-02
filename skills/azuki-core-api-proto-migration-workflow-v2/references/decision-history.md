@@ -19,6 +19,7 @@
 | 2026-09-28 | Giữ comment Console (kể cả `TODO:`) khi field không đổi; comment sai → theo `azuki-app/locales/ja/enum.json` | user (#2287) | Còn hiệu lực |
 | 2026-09-29 | **Giữ type Console** (`Money`, `PhoneNumber`, `PostalAddress`...); không convert | user (review #2350 → #2351) | Còn hiệu lực |
 | 2026-09-29 | Response `string.uuid` + `REQUIRED` chỉ khi đã đọc handler | user (#2281 `SubmitBorrowerWithdrawalDecisionResponse`, #2298 `SubmitReviewResponse`) | Còn hiệu lực |
+| 2026-10-02 | **Giữ `oneof` như Console** (kể cả chỉ 1 field), không đổi thành `optional` | user (sửa lỗi của #2287 ở #2374) | Còn hiệu lực; **thay** quy tắc "`oneof` 1 field → `optional`" trước đó (không có thảo luận review nào xác nhận) |
 
 ## PR minh chứng
 
@@ -34,6 +35,7 @@
 | #2350 | `GetBorrowerProvidedDocuments` (tác giả khác), review bằng v2 | Import type Core đã có (`BorrowerStatus`, `CoreDocumentKey`) là đúng; không áp quy tắc convert type chưa được chốt |
 | #2351 | Revert convert type của `Borrower`; tạo `core.entity` cho BorrowerProfile / BorrowerAssociate; `ReviewRequestParams` append vào `review_request.proto` | Mẫu follow-up nhiều nhóm; mẫu append file có sẵn |
 | #2352 | Đăng ký 10 RPC đã merge | Mẫu PR lô; RPC chưa merge để lại PR lô sau |
+| #2374 | Khôi phục `oneof` cho `BorrowerFilter.identity_verification_status` (#2287 đã đổi thành `optional`) | Mẫu follow-up 1 field; đổi `oneof`↔`optional` làm đổi kiểu sinh ra (Go, TS) nên azuki đang dùng field phải sửa converter sau khi bump |
 
 ## Lỗi đã gặp (đừng lặp lại)
 
@@ -43,3 +45,4 @@
 - Thêm `REQUIRED` cho `SubmitBorrowerWithdrawalDecisionResponse.borrower_withdrawal_decision_id` mà handler không set → revert (amend).
 - Khẳng định "Money → int64" trong review #2350 khi quy tắc đó chưa từng được chốt → sai; chỉ nêu quy tắc có trong bảng quyết định.
 - Local `master` cũ → danh sách RPC cần đăng ký sai; luôn so với `origin/master` sau `git fetch`.
+- Đơn giản `oneof` 1 field thành `optional` (#2287) khi chưa ai yêu cầu → kiểu sinh ra khác Console (Go: con trỏ thay vì interface; TS: `?:` thay vì `{ case, value }`), phải sửa lại ở #2374. Chỉ đổi shape khi quy tắc có trong bảng quyết định VÀ có nguồn (PR/review) xác nhận.

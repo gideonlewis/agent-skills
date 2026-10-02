@@ -69,7 +69,6 @@ Một gạch đầu dòng mỗi khác biệt, kèm lý do ngắn. Các loại th
 ```markdown
 - Side-loaded `borrowers` map (deprecated in Console) is dropped; the response keeps only `pagination` and `borrower_associates`. Later fields are renumbered.
 - `core.entity.Borrower` is renumbered 1..N (Console has `reserved 30` and gaps at 16, 37, 38). Field names, types, and order are unchanged.
-- `BorrowerRelatedPartyFilter.target` is a single-field `oneof` in Console; Core uses `optional` for the same field.
 - `GuaranteeProvider` is defined in an enum-only file `core/entity/guarantee_assessment_result.proto`, because the Guarantee Assessment domain has no Core RPC yet but `BorrowerFilter` references it.
 - `SubmitReviewResponse.review_id` adds `(buf.validate.field).string.uuid` and `(google.api.field_behavior) = REQUIRED` — the azuki handler always sets this field on every success path.
 ```

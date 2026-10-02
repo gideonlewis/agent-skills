@@ -237,7 +237,7 @@ git show origin/master:proto/core/entity/<domain>.proto      # đọc nội dung
 
 ## 7. Filter
 
-Mirror đủ field của `console.rpc.<X>Filter`, cùng tên, cùng validate. Đánh số liên tục theo thứ tự Console. `oneof` chỉ 1 field → `optional`.
+Mirror đủ field của `console.rpc.<X>Filter`, cùng tên, cùng validate. Đánh số liên tục theo thứ tự Console. `oneof` giữ nguyên là `oneof` (cùng tên oneof, kể cả chỉ 1 field), không đổi thành `optional`: kiểu sinh ra khác nhau (Go interface vs con trỏ, TS `{ case, value }` vs `?:`) nên code azuki / FE sẽ khác Console.
 
 ```proto
 // 借主関係者のフィルター
@@ -310,7 +310,7 @@ cmp_fields proto/console/rpc/<console>.proto proto/core/rpc/<core>.proto
 cmp_fields proto/console/entity/<x>.proto proto/core/entity/<x>.proto
 ```
 
-Chênh lệch hợp lệ duy nhất: side-load bị xoá, `oneof` → `optional`. Số field kiểm tra riêng theo quyết định #3.
+Chênh lệch hợp lệ duy nhất: side-load bị xoá. Số field kiểm tra riêng theo quyết định #3; `oneof` kiểm tra riêng bằng `grep -n "oneof" <file Console> <file Core>` (số lượng và tên oneof phải khớp).
 
 ---
 

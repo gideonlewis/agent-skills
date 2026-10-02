@@ -43,7 +43,7 @@ gh pr diff <n> -- proto/core/entity/<x>.proto | grep -E "^-(message|enum) "     
 - **Message riêng của Console** (`YearMonth`, `Sex`...) → phải có message Core cùng tên, cùng field.
 - **Số field entity/filter**: liên tục 1..N theo thứ tự Console. Còn `reserved` / khoảng trống → **Nên sửa**. Đảo thứ tự → **Cần sửa**.
 - **Enum**: giữ đúng giá trị, số, khoảng trống và `reserved` như Console. Đánh số lại enum → **Cần sửa**.
-- **Filter**: đủ mọi field Console, kể cả field tham chiếu domain chưa có Core RPC. Bỏ field → **Cần sửa**. Ca thật: #2287 lần đầu bỏ 5 field `BorrowerFilter` (`core_system_tag` còn, các field khác mất) → phải khôi phục. `oneof` 1 field → `optional` là hợp lệ.
+- **Filter**: đủ mọi field Console, kể cả field tham chiếu domain chưa có Core RPC. Bỏ field → **Cần sửa**. Ca thật: #2287 lần đầu bỏ 5 field `BorrowerFilter` (`core_system_tag` còn, các field khác mất) → phải khôi phục. `oneof` phải giữ nguyên `oneof` (kể cả chỉ 1 field); đổi thành `optional` → **Cần sửa** (ca thật: #2287 đổi `BorrowerFilter.identity_verification_status`, sửa ở #2374).
 - **Enum domain khác**: file `core/entity/<domain>.proto` chỉ chứa enum cần dùng, có comment `…ドメインの Core RPC が未実装のため、…が参照する enum のみ定義する。` Thiếu comment → **Nên sửa**.
 - **File có sẵn**: PR xoá message/enum đang có trên `master` (do `Write` đè) → **Blocker** (`buf lint` sẽ báo `cannot find core.entity.X` nếu RPC khác dùng; nếu không ai dùng thì mất âm thầm). Type đã có ở Core mà PR định nghĩa lại → **Cần sửa** (import). Ca thật đúng: #2350 import `BorrowerStatus`, `CoreDocumentKey` có sẵn.
 - **Comment**: giữ comment Console (kể cả `TODO:`) khi field không đổi. Mất `TODO:` → **Nên sửa**.
