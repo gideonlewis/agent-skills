@@ -62,25 +62,25 @@ Eight commands that map to the development lifecycle:
 
 | Skill | Mô tả |
 |---|---|
-| [`azuki-app-feature-flag-cleanup`](skills/azuki-app-feature-flag-cleanup/SKILL.md) | Gỡ feature flag đã rollout xong khỏi frontend azuki-app (Phase 1 của xoá 2 pha) |
-| [`azuki-core-api-backlog-task`](skills/azuki-core-api-backlog-task/SKILL.md) | Rã chunk Core API migration thành BE Task Backlog và viết description (Solution, RPC info, Expected, Evidence) |
-| [`azuki-core-api-migration-pr`](skills/azuki-core-api-migration-pr/SKILL.md) | Soạn title/description tiếng Anh từ migration report, tạo PR, gắn label semver |
-| [`azuki-core-api-proto-migration-workflow`](skills/azuki-core-api-proto-migration-workflow/SKILL.md) | Branch → proto → commit/push → PR → review cho một batch Console RPC hoặc PR follow-up |
-| [`azuki-core-api-proto-migration-workflow-v2`](skills/azuki-core-api-proto-migration-workflow-v2/SKILL.md) | Migrate 1 Console RPC sang Core proto với core.entity riêng, giữ type Console, 1 RPC 1 PR, đăng ký core_service theo lô |
-| [`azuki-feature-flag-cleanup-pr-description`](skills/azuki-feature-flag-cleanup-pr-description/SKILL.md) | Viết PR description cho cleanup feature flag backend azuki, có mục Scope ảnh hưởng bắt buộc |
-| [`azuki-feature-flag-cleanup-verify`](skills/azuki-feature-flag-cleanup-verify/SKILL.md) | Double-check việc xoá feature flag ở azuki/azuki-app trước khi mở PR hoặc khi review PR |
-| [`azuki-feature-flag-implementation`](skills/azuki-feature-flag-implementation/SKILL.md) | Triển khai feature flag phía repo azuki |
-| [`azuki-feature-flag-proto-implementation`](skills/azuki-feature-flag-proto-implementation/SKILL.md) | Thêm field feature flag vào cred-proto |
-| [`azuki-kinako-ui-adapter`](skills/azuki-kinako-ui-adapter/SKILL.md) | Tạo adapter Vibe→Kinako cho một component trong azuki-app |
-| [`azuki-migrate-console-rpc-to-core-proto`](skills/azuki-migrate-console-rpc-to-core-proto/SKILL.md) | Phân tích Console RPC, viết proto Core theo mẫu chunk_1, xuất migration report |
-| [`azuki-review-console-rpc-to-core-proto`](skills/azuki-review-console-rpc-to-core-proto/SKILL.md) | Đối chiếu PR migrate Console RPC sang Core proto với Console gốc và code azuki thật |
+| [`spcc-app-feature-flag-cleanup`](skills/spcc-app-feature-flag-cleanup/SKILL.md) | Gỡ feature flag đã rollout xong khỏi frontend azuki-app (Phase 1 của xoá 2 pha) |
+| [`spcc-core-api-backlog-task`](skills/spcc-core-api-backlog-task/SKILL.md) | Rã chunk Core API migration thành BE Task Backlog và viết description (Solution, RPC info, Expected, Evidence) |
+| [`spcc-core-api-migration-pr`](skills/spcc-core-api-migration-pr/SKILL.md) | Soạn title/description tiếng Anh từ migration report, tạo PR, gắn label semver |
+| [`spcc-core-api-proto-migration-workflow`](skills/spcc-core-api-proto-migration-workflow/SKILL.md) | Branch → proto → commit/push → PR → review cho một batch Console RPC hoặc PR follow-up |
+| [`spcc-core-api-proto-migration-workflow-v2`](skills/spcc-core-api-proto-migration-workflow-v2/SKILL.md) | Migrate 1 Console RPC sang Core proto với core.entity riêng, giữ type Console, 1 RPC 1 PR, đăng ký core_service theo lô |
+| [`spcc-feature-flag-cleanup-pr-description`](skills/spcc-feature-flag-cleanup-pr-description/SKILL.md) | Viết PR description cho cleanup feature flag backend azuki, có mục Scope ảnh hưởng bắt buộc |
+| [`spcc-feature-flag-cleanup-verify`](skills/spcc-feature-flag-cleanup-verify/SKILL.md) | Double-check việc xoá feature flag ở azuki/azuki-app trước khi mở PR hoặc khi review PR |
+| [`spcc-feature-flag-implementation`](skills/spcc-feature-flag-implementation/SKILL.md) | Triển khai feature flag phía repo azuki |
+| [`spcc-feature-flag-proto-implementation`](skills/spcc-feature-flag-proto-implementation/SKILL.md) | Thêm field feature flag vào cred-proto |
+| [`spcc-kinako-ui-adapter`](skills/spcc-kinako-ui-adapter/SKILL.md) | Tạo adapter Vibe→Kinako cho một component trong azuki-app |
+| [`spcc-migrate-console-rpc-to-core-proto`](skills/spcc-migrate-console-rpc-to-core-proto/SKILL.md) | Phân tích Console RPC, viết proto Core theo mẫu chunk_1, xuất migration report |
+| [`spcc-review-console-rpc-to-core-proto`](skills/spcc-review-console-rpc-to-core-proto/SKILL.md) | Đối chiếu PR migrate Console RPC sang Core proto với Console gốc và code azuki thật |
 | [`cred-proto-git`](skills/cred-proto-git/SKILL.md) | Tạo branch (mới / follow-up stacked trên PR), commit, push an toàn trong cred-proto |
 | [`github-review-requests`](skills/github-review-requests/SKILL.md) | Bảng PR open cố định ở azuki/azuki-app/cred-proto theo đối tượng (team, tôi, từng thành viên) hoặc 1 repo, cho Mattermost |
-| [`spc-collab-daily-brief`](skills/spc-collab-daily-brief/SKILL.md) | Daily brief ngày làm việc trước, gộp Backlog SPCC + Mattermost SPC - dev: highlights, cần xác nhận, blockers, status User Story |
-| [`spc-collab-daily-sheet`](skills/spc-collab-daily-sheet/SKILL.md) | Tóm tắt Mattermost thread và cập nhật dòng User Story trên sheet SPC Collab Sprint daily reports |
-| [`spc-collab-daily-sheet-sync`](skills/spc-collab-daily-sheet-sync/SKILL.md) | Tổng hợp Mattermost + Backlog (05:00 → lúc gọi), gom task con vào ticket cha, preview theo ticket rồi cập nhật sheet daily |
-| [`spc-collab-calendar`](skills/spc-collab-calendar/SKILL.md) | Đặt lịch họp cho dự án spc-collab theo nhóm DEV/PO/BrSE/QC |
-| [`spc-collab-report`](skills/spc-collab-report/SKILL.md) | Viết report/summary đồng nhất cho dự án spc-collab lên Mattermost/Slack/Jira |
+| [`spcc-daily-brief`](skills/spcc-daily-brief/SKILL.md) | Daily brief ngày làm việc trước, gộp Backlog SPCC + Mattermost SPC - dev: highlights, cần xác nhận, blockers, status User Story |
+| [`spcc-daily-sheet-sync`](skills/spcc-daily-sheet-sync/SKILL.md) | Cập nhật dòng ticket trên sheet SPC Collab Sprint daily reports từ một Mattermost thread hoặc từ activity report |
+| [`spcc-activity-report`](skills/spcc-activity-report/SKILL.md) | Report hoạt động Mattermost + Backlog theo ticket (05:00 → lúc gọi), gom task con vào ticket cha |
+| [`spcc-calendar`](skills/spcc-calendar/SKILL.md) | Đặt lịch họp cho dự án spc-collab theo nhóm DEV/PO/BrSE/QC |
+| [`spcc-report`](skills/spcc-report/SKILL.md) | Viết report/summary đồng nhất cho dự án spc-collab lên Mattermost/Slack/Jira |
 
 ### AI Platform & công cụ
 

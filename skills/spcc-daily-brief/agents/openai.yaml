@@ -1,0 +1,28 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "SPC-Collab Daily Brief"       # Tên hiển thị trên UI
+  short_description: "Brief gộp Backlog SPCC + Mattermost SPC - dev của ngày làm việc trước: điểm chính, cần xác nhận, stuck"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $spcc-daily-brief để tóm tắt những gì xảy ra hôm qua trên Backlog SPCC và channel SPC - dev."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/spcc-daily-brief-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/spcc-daily-brief.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+dependencies:          # Khai báo công cụ mà skill phụ thuộc
+  tools:
+    - type: "mcp"
+      value: "ai-platform"
+      description: "teq_backlog-* (activity, member, status) và mattermost-* (read_channel, read_post, search_posts)"
+    - type: "cli"
+      value: "jq"
+      description: "Lọc activity/post theo khung thời gian"
+    - type: "cli"
+      value: "python3"
+      description: "Tính khung ngày làm việc trước theo giờ VN"

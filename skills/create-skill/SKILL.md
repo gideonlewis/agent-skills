@@ -214,7 +214,7 @@ git add skills/my-skill/ && git commit -m "Add skill: my-skill"
 - Đặt tên theo **hệ thống hoặc miền công việc**, không theo tên nội bộ mơ hồ:
   `nulab-backlog` rõ hơn `backlog`, `google-calendar` rõ hơn `calendar-skill`.
 - Skill gắn với một repo cụ thể thì đưa tên repo vào:
-  `azuki-feature-flag-implementation`.
+  `spcc-feature-flag-implementation`.
 - Tránh trùng tên với skill global đã có sẵn (kiểm tra danh sách skill hiện
   tại trước khi đặt tên) — trùng tên gây nhầm lẫn không biết bản nào đang được
   kích hoạt.

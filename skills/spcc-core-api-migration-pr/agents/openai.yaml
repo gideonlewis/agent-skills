@@ -1,0 +1,22 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "Core API Migration PR"       # Tên hiển thị trên UI
+  short_description: "Soạn title/description tiếng Anh từ migration report, tạo PR, gắn label semver"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $spcc-core-api-migration-pr để tạo PR cho proto Core API migration từ migration report."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/spcc-core-api-migration-pr-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/spcc-core-api-migration-pr.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+dependencies:          # Khai báo công cụ mà skill phụ thuộc
+  tools:
+    - type: "cli"
+      value: "gh"
+      description: "Tạo PR, sửa description, gắn label"

@@ -1,0 +1,25 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "Review Console RPC → Core Proto PR"       # Tên hiển thị trên UI
+  short_description: "Đối chiếu PR migrate Console RPC sang Core proto với Console gốc và code azuki thật"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $spcc-review-console-rpc-to-core-proto để review PR migrate Console RPC sang Core proto trong cred-proto."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/spcc-review-console-rpc-to-core-proto-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/spcc-review-console-rpc-to-core-proto.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+dependencies:          # Khai báo công cụ mà skill phụ thuộc
+  tools:
+    - type: "cli"
+      value: "gh"
+      description: "Lấy diff, file thay đổi, CI status của PR cần review"
+    - type: "cli"
+      value: "grep"
+      description: "Đối chiếu field với proto Console, kiểm chứng validate bổ sung bằng code azuki/azuki-app"

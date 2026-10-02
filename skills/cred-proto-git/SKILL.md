@@ -9,8 +9,8 @@ description: >
   vào nhánh PR gốc). Dùng khi cần "tạo branch", "tạo nhánh mới", "làm trên
   nhánh của PR #...", "commit và push" trong cred-proto, hoặc khi một workflow
   migrate Console → Core API cần bước chuẩn bị branch hay commit/push. Không lo
-  việc viết proto (skill `azuki-migrate-console-rpc-to-core-proto`) hay tạo PR
-  và description (skill `azuki-core-api-migration-pr`).
+  việc viết proto (skill `spcc-migrate-console-rpc-to-core-proto`) hay tạo PR
+  và description (skill `spcc-core-api-migration-pr`).
 ---
 
 # Git cho cred-proto

@@ -13,7 +13,7 @@ description: >
   Vĩ/Tiên/Định/Dũng", "PR bên cred-proto", "PR tồn đọng", "review queue", "team
   còn PR nào chưa merge", "report PR lên Mattermost", hoặc đầu ngày muốn nắm
   việc review. Không dùng để review nội dung một PR cụ thể (xem
-  `azuki-review-console-rpc-to-core-proto` hoặc `review`), không dùng cho merge
+  `spcc-review-console-rpc-to-core-proto` hoặc `review`), không dùng cho merge
   request GitLab (xem `ai-platform-gitlab`).
 version: 0.6.0
 author: TEQ AI Platform
@@ -68,7 +68,7 @@ zarame-server...) bị bỏ qua vì không thuộc phạm vi report hằng ngày
 | Định (dinhnguyen) | `teq-dinhnguyen` |
 | Dũng (dungnguyen) | `teq-nguyenhuudung` |
 
-DEV của spc-collab (xem `spc-collab-calendar`) trừ Giao và Nam theo yêu cầu
+DEV của spc-collab (xem `spcc-calendar`) trừ Giao và Nam theo yêu cầu
 của leader. `dungnguyen@teqnological.asia` là `teq-nguyenhuudung`, không phải
 `dungnguyen-teq`. Khi team thay đổi, chỉ sửa bảng này.
 

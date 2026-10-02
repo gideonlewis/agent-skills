@@ -1,0 +1,22 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "Feature Flag Cleanup PR — azuki"       # Tên hiển thị trên UI
+  short_description: "Viết PR description cho cleanup feature flag backend azuki, có mục Scope ảnh hưởng bắt buộc"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $spcc-feature-flag-cleanup-pr-description để soạn PR description cho việc xoá feature flag bên azuki, kèm mục 影響範囲."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/spcc-feature-flag-cleanup-pr-description-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/spcc-feature-flag-cleanup-pr-description.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+# dependencies:          # Khai báo công cụ mà skill phụ thuộc
+#   tools:
+#     - type: "cli"      # "cli" cho lệnh shell, "mcp" cho MCP server
+#       value: "gh"      # Tên lệnh hoặc tên MCP server
+#       description: "Vì sao skill cần công cụ này"
