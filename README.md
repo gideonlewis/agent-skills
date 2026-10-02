@@ -45,7 +45,7 @@ Eight commands that map to the development lifecycle:
 
 ## Skills
 
-32 skills trong `skills/`. Mô tả lấy từ `short_description` trong `agents/openai.yaml` — khi thêm hoặc sửa skill, cập nhật bảng này.
+35 skills trong `skills/`. Mô tả lấy từ `short_description` trong `agents/openai.yaml` — khi thêm hoặc sửa skill, cập nhật bảng này.
 
 ### Lifecycle
 
@@ -77,6 +77,8 @@ Eight commands that map to the development lifecycle:
 | [`cred-proto-git`](skills/cred-proto-git/SKILL.md) | Tạo branch (mới / follow-up stacked trên PR), commit, push an toàn trong cred-proto |
 | [`github-review-requests`](skills/github-review-requests/SKILL.md) | Bảng PR open cố định ở azuki/azuki-app/cred-proto theo đối tượng (team, tôi, từng thành viên) hoặc 1 repo, cho Mattermost |
 | [`spc-collab-daily-brief`](skills/spc-collab-daily-brief/SKILL.md) | Daily brief ngày làm việc trước, gộp Backlog SPCC + Mattermost SPC - dev: highlights, cần xác nhận, blockers, status User Story |
+| [`spc-collab-daily-sheet`](skills/spc-collab-daily-sheet/SKILL.md) | Tóm tắt Mattermost thread và cập nhật dòng User Story trên sheet SPC Collab Sprint daily reports |
+| [`spc-collab-daily-sheet-sync`](skills/spc-collab-daily-sheet-sync/SKILL.md) | Tổng hợp Mattermost + Backlog (05:00 → lúc gọi), gom task con vào ticket cha, preview theo ticket rồi cập nhật sheet daily |
 | [`spc-collab-calendar`](skills/spc-collab-calendar/SKILL.md) | Đặt lịch họp cho dự án spc-collab theo nhóm DEV/PO/BrSE/QC |
 | [`spc-collab-report`](skills/spc-collab-report/SKILL.md) | Viết report/summary đồng nhất cho dự án spc-collab lên Mattermost/Slack/Jira |
 

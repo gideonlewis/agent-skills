@@ -1,0 +1,16 @@
+{
+  "timezone": "Asia/Ho_Chi_Minh",
+  "default_since": "05:00",
+  "mattermost": {
+    "channel_id": "it63ufxpxtbo7xgj4g44g3woqy",
+    "channel_name": "SPC - dev",
+    "bots": ["eddiebot"]
+  },
+  "backlog": {
+    "space_url": "https://teq-dev.backlog.com",
+    "project_id": 149054,
+    "project_key": "SPCC",
+    "report_issue_types": ["JP User Story", "Bug", "JP Bug", "JP Request", "JP Feedback"],
+    "skip_issue_types_note": "Task, BE Task, FE Task, QC Task và các loại khác không được report riêng — có cha thì gộp vào cha, không có cha thì vào mục skipped"
+  }
+}

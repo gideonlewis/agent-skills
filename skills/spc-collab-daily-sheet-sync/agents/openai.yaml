@@ -1,0 +1,25 @@
+# agents/openai.yaml — cấu hình interface cho OpenAI/Codex agent runtime.
+# YAML dùng ký tự "#" để comment (không phải "//"). Các thuộc tính đang được
+# comment là tuỳ chọn: bỏ dấu "#" ở đầu dòng khi cần bật.
+
+interface:
+  display_name: "SPC-Collab Daily Sheet Sync"       # Tên hiển thị trên UI
+  short_description: "Tổng hợp Mattermost + Backlog (05:00 → lúc gọi), gom task con vào ticket cha, preview theo ticket rồi cập nhật sheet daily"    # Mô tả ngắn, một dòng
+  default_prompt: "Dùng $spc-collab-daily-sheet-sync để tổng hợp hoạt động từ sáng tới giờ và preview cập nhật sheet daily."      # Prompt gợi ý khi người dùng chọn skill
+  # icon_small: "./assets/spc-collab-daily-sheet-sync-small.svg"   # Icon nhỏ, đường dẫn tương đối tới thư mục skill
+  # icon_large: "./assets/spc-collab-daily-sheet-sync.png"         # Icon lớn
+  # brand_color: "#0F62FE"        # Màu thương hiệu, dạng hex
+
+policy:
+  allow_implicit_invocation: false  # true = cho phép agent tự kích hoạt khi thấy phù hợp
+  # products:                       # Giới hạn runtime được phép dùng skill
+  #   - CODEX
+
+dependencies:          # Khai báo công cụ mà skill phụ thuộc
+  tools:
+    - type: "mcp"
+      value: "ai-platform"
+      description: "mattermost-* (read_channel, read_post, search_posts, search_users), teq_backlog-* (get_user_recent_updates, get_issues, get_issue, get_project_user_list), google_sheets-get_values"
+    - type: "cli"
+      value: "python3"
+      description: "references/collect.py: khung giờ, thành viên, lọc và gom ticket"

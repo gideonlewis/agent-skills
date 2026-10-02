@@ -11,7 +11,9 @@ description: >
   "cập nhật sheet daily giúp tôi", "update daily sheet theo thread này", "ghi
   lại release date lên sheet", hoặc khi user dán permalink thread và muốn đưa
   kết luận lên sheet daily. Cũng dùng để chỉ tóm tắt và xem trước thay đổi
-  ("summary thôi", "xem trước"). Không dùng cho brief cả ngày của dự án (xem
+  ("summary thôi", "xem trước"). Cũng nhận `apply-plan <plan.json>` từ skill
+  `spc-collab-daily-sheet-sync` để ghi plan đã duyệt; cần tổng hợp cả ngày
+  thay vì một thread thì dùng skill đó. Không dùng cho brief cả ngày của dự án (xem
   `spc-collab-daily-brief`), không dùng để sửa ticket Backlog (xem
   `nulab-backlog`), không dùng cho report task (xem `spc-collab-report`).
 version: 0.1.0
@@ -38,8 +40,26 @@ reply vào thread cho mọi người thấy đã sửa gì.
 - Chỉ muốn tóm tắt và xem trước thay đổi, chưa ghi: "summary thôi",
   "preview", "xem trước".
 
+- Được skill `spc-collab-daily-sheet-sync` gọi với `apply-plan <plan.json>`
+  sau khi user đã duyệt preview — xem "Chế độ apply-plan" bên dưới.
+
 Không dùng để soạn brief cả ngày, thao tác ticket Backlog hay viết report —
 xem các skill ghi trong `description`.
+
+## Chế độ apply-plan
+
+Đầu vào là change plan đã được user duyệt (format ghi ở Bước 4 của
+`spc-collab-daily-sheet-sync`), không phải thread:
+
+1. Bỏ qua Bước 1, 2, 4, 5. Dùng `sprint_tab` trong plan; khác `sprint_tab`
+   trong config → vẫn dùng của plan nhưng nêu rõ trong kết quả.
+2. Bước 3 (đọc sheet) để map header → cột. Kiểm tra mỗi `row` vẫn đúng
+   ticket (dòng có thể bị chèn/xoá từ lúc preview); lệch → bỏ item đó, nêu
+   trong kết quả.
+3. Bước 6 ở chế độ ghi, coi `old` của từng thay đổi là "giá trị cũ" để so.
+   Sửa `FE`/`BE` thì vẫn dựng lại `Remark` theo `column-guide.md`. Mục
+   `confirm` không bao giờ được ghi.
+4. Kết quả trả trong chat theo format Bước 7, không post Mattermost.
 
 ## Config
 
